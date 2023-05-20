@@ -9,3 +9,13 @@ Open Church AI
 6. Mission: Our mission is to create an open church ai application that is easy to use and will help to streamline the recruitment process. 
 7. We will use the latest technologies such as flutter, xampp, php, mysql, html, css, javascript, art drawing, and music instrument creation to make the application user friendly and powerful. 
 8. We will also ensure that the application is secure and reliable, so that church members can feel confident that their information is safe.
+
+# safety
+With AI helps, it is possible to solved the problems in social media like as abused words, explicit words, bullying words, terrors indicator and much more done automatically.
+It is also may be integrated to make reporting to the institution directly according to the status of urgency.
+
+# communication
+With AI common sense help, all users are able to have the very basic knowledge in security of the technology products. there is no more big gaps between the less techno guys and the techno guys.
+
+# glory
+Within the AI chatgpt, it may achieve to maintain and keep the highest ethical, moral, noble characteristics code and conducts.
