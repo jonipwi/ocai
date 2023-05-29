@@ -1,6 +1,6 @@
 package main
 
-import {
+import (
     "database/sql"
     "errors"
     "fmt"
@@ -14,7 +14,7 @@ import {
     "unicode/utf8"
 
     "github.com/go-sql-driver/mysql"
-}
+)
 var db *sql.DB
 
 func main() {
