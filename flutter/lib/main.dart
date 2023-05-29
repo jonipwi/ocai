@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
+import 'widgets.dart';
 import 'globals.dart';
 
 void main() {
@@ -61,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
           headers: qParams
       );
       if (responseData.statusCode == 200) {
-        print(responseData.body);
+        //print(responseData.body);
         final data = responseData.body.split('|');
         String decoded = utf8.decode(base64.decode(data[1]));
         setState(() {
@@ -69,6 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Answer = Result;
           loading = false;
         });
+        print('$Answer');
       }
     } catch (e) {
       print('Answer: Error Http!');
@@ -296,7 +298,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Column(
                                 children: [
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Container(
@@ -315,12 +317,31 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Column(
                                 children: [
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Icon(Icons.circle_notifications, color: Colors.blueGrey),
                                       Container(
-                                        child: Text('${Answer}'),
+                                        child: Flexible(
+                                          child: Text('${Answer}'),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                ],
+                              )
+                          ) : (loading == true) ? Padding(
+                              padding: EdgeInsets.only(top: 5, bottom: 5, left: 5, right: 5),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Icon(Icons.circle_notifications, color: Colors.blueGrey),
+                                      JumpingDotsProgressIndicator(
+                                          numberOfDots: 3,
                                       ),
                                     ],
                                   ),
