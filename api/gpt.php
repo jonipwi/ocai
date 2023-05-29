@@ -3,10 +3,15 @@ include "db.php";
 error_reporting(0);
 include "secured.php";
 include "getAPI.php";
+include "openai.php";   //get your own API from openai
 
 function chatGPT($q) {
-    //process the $q
-    $r = "testing";
+    $r = "no result.";
+    //process the $q with GPT, AI, AGI and given result in $r
+    if (trim($q) != "") {
+        $r = openai($q);
+    }
+    
     return $r;
 }
 if (trim($deviceid) == "") exit('not available!');
