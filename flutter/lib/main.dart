@@ -100,6 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                         Divider(),
                         Center( child: Text('(C)opyright 2023. Ocai Team & Community')),
+                        Center( child: Text('https://github.com/jonipwi/ocai.git')),
 
                         SizedBox(height: 100),
                       ]),
