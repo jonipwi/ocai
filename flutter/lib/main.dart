@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
+import 'globals.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,8 +35,27 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  void callPage(int page, String title) {
+    setState(() {
+      goToPage = page;
+      titlePage = title;
+    });
+    print('Page: ${goToPage} - ${title}');
+  }
+
   void GPTDialogue() {
-    print('GPT Dialogue');
+    setState(() {
+      Question = 'How are you, AI?';
+      Answer = 'I am fine, thank you. And you?';
+      Result = '';
+    });
+    callPage(66, 'GPT Dialogue');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    callPage(0, 'Ocai');
   }
 
   @override
@@ -45,7 +65,11 @@ class _MyHomePageState extends State<MyHomePage> {
     final double outrange = 30.0;
 
     return Scaffold(
-      body: Stack(
+      body: GestureDetector(
+        onTap: () {
+          callPage(0, 'Ocai');
+        },
+        child: Stack(
           children: [
             Positioned(
               top: outrange,
@@ -109,7 +133,119 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
 
+            (goToPage == 66) ? Positioned(
+                top: outrange + 20,
+                left: 20,
+                child: Container(
+                  width: width - 40,
+                  height: height - outrange - 100,
+                  //color: Color.fromRGBO(250, 250, 250, 0.9),
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(240, 250, 240, 0.9),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10)
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: SingleChildScrollView(
+                      physics: ScrollPhysics(),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              width: width - 40,
+                              height: 36,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(50, 100, 50, 0.8),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      //bottomLeft: Radius.circular(10),
+                                      //bottomRight: Radius.circular(10)
+                                  ),
+                                ),
+                                child: Padding(
+                                padding: EdgeInsets.only(top: 5, bottom: 5),
+                                child: Center(
+                                  child: Text('${titlePage}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                                ),
+                              )
+                            ),
+
+                            Padding(
+                                padding: EdgeInsets.only(top: 5, bottom: 0, left: 5, right: 5),
+                                child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Icon(Icons.circle_notifications, color: Colors.blueGrey),
+                                      Container(
+                                        child: Text('Hello, how may I help you?'),
+                                      ),
+                                    ],
+                                  ),
+
+                                ],
+                              )
+                            ),
+
+                            (Question!.length > 0) ? Padding(
+                                padding: EdgeInsets.only(top: 5, bottom: 0, left: 5, right: 5),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          child: Text('${Question}'),
+                                        ),
+                                        Icon(Icons.account_circle_rounded, color: Colors.blueGrey),
+                                      ],
+                                    ),
+
+                                  ],
+                                )
+                            ) : Container(),
+
+                            (Answer!.length > 0) ? Padding(
+                                padding: EdgeInsets.only(top: 5, bottom: 5, left: 5, right: 5),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Icon(Icons.circle_notifications, color: Colors.blueGrey),
+                                        Container(
+                                          child: Text('${Answer}'),
+                                        ),
+                                      ],
+                                    ),
+
+                                  ],
+                                )
+                            ) : Container(),
+
+                          ],
+                      )
+                  ),
+                ),
+            ): Container(),
           ]),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: GPTDialogue,
         tooltip: 'GPT Dialogue',
