@@ -40,3 +40,6 @@ Open Church AI
 2. If the church does not have the necessary skills to maintain their digital data, it may become vulnerable to data breaches. 
 3. If the church does not have a team dedicated to online service, it can lead to a lack of customer service and slow response times. 
 4. If the church does not have adequate security measures in place, then it could be exposed to malicious attacks.
+
+# playstore
+https://play.google.com/store/apps/details?id=com.sobatam.ocai.ocai
