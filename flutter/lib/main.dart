@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
@@ -35,6 +38,43 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController QAController = TextEditingController();
+
+  Future<Null> AskAI(String deviceid, String q) async{
+
+    Map<String, String> qParams = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${serverToken}',
+      'x-device': '${deviceid}',
+      'x-target': '${q}',
+    };
+
+    setState(() {
+      loading = true;
+    });
+
+    String encoded = base64.encode(utf8.encode(q));
+    String fetchRequestUrl = "https://dogemazon.net/ocai/gpt.php?cmd=prompt&q=${encoded}";
+    try {
+      final responseData = await http.get(
+          Uri.parse(fetchRequestUrl),
+          headers: qParams
+      );
+      if (responseData.statusCode == 200) {
+        print(responseData.body);
+        final data = responseData.body.split('|');
+        String decoded = utf8.decode(base64.decode(data[1]));
+        setState(() {
+          Result = decoded;
+          Answer = Result;
+          loading = false;
+        });
+      }
+    } catch (e) {
+      print('Answer: Error Http!');
+    }
+
+  }
 
   void callPage(int page, String title) {
     setState(() {
