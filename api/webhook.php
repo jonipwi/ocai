@@ -10,6 +10,10 @@ $fp = file_put_contents('./hook.log', $req_dump );
 if($json = json_decode(file_get_contents("php://input"), true)){
    $data = $json;
 }
-print_r($data);
+//print_r($data);
 
+$encoded = $data;
+$myJSON = json_encode($encoded);
+header('Content-type: application/json; charset=utf-8');
+exit($myJSON);
 ?>
