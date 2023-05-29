@@ -1,6 +1,7 @@
 <?php
 include "db.php";
 error_reporting(0);
+include "autoload.php";
 include "secured.php";
 include "getAPI.php";
 
