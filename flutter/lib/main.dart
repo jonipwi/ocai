@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -39,6 +40,29 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController QAController = TextEditingController();
+
+  late Timer _timer;
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+          (Timer timer) {
+        if (i == 0) {
+          setState(() {
+            //timer.cancel();
+            i = 3;
+          });
+        } else {
+          setState(() {
+            i--;
+            //------ get datetime -----
+            DateTime dateToday = new DateTime.now();
+          });
+        }
+      },
+    );
+  }
 
   Future<Null> AskAI(String deviceid, String q) async{
 
@@ -82,6 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       goToPage = page;
       titlePage = title;
+      askHitReady = (page == 66);
     });
     print('Page: ${goToPage} - ${title}');
   }
@@ -92,16 +117,14 @@ class _MyHomePageState extends State<MyHomePage> {
         Question = '${QAController.text}';
         Result = '';
         Answer = '';
-        askHitReady = false;
         AskAI('${deviceId}', '${Question}');
       });
     } else {
       setState(() {
-        //QAController.clear();
+        QAController.clear();
         Question = '';
         Result = '';
         Answer = '';
-        askHitReady = true;
       });
     }
     callPage(66, 'GPT Dialogue');
@@ -110,8 +133,17 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    startTimer();
+    print('Start timer...');
     callPage(0, 'Ocai');
     askHitReady = false;
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+    print('Exiting timer...');
   }
 
   @override
@@ -282,7 +314,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Icon(Icons.circle_notifications, color: Colors.blueGrey),
+                                      Icon(Icons.circle_notifications, color: Colors.blueGrey, size: 20),
                                       Container(
                                         child: Text('Hello, how may I help you?'),
                                       ),
@@ -302,9 +334,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Container(
-                                        child: Text('${Question}'),
+                                        child: Flexible(
+                                          child: Text('${Question}'),
+                                        ),
                                       ),
-                                      Icon(Icons.account_circle_rounded, color: Colors.blueGrey),
+                                      Icon(Icons.account_circle_rounded, color: Colors.blueGrey, size: 20),
                                     ],
                                   ),
 
@@ -320,7 +354,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Icon(Icons.circle_notifications, color: Colors.blueGrey),
+                                      Icon(Icons.circle_notifications, color: Colors.blueGrey, size: 20),
                                       Container(
                                         child: Flexible(
                                           child: Text('${Answer}'),
@@ -339,7 +373,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Icon(Icons.circle_notifications, color: Colors.blueGrey),
+                                      Icon(Icons.circle_notifications, color: Colors.blueGrey, size: 20),
                                       JumpingDotsProgressIndicator(
                                           numberOfDots: 3,
                                       ),

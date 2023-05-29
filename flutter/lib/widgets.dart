@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'globals.dart';
 
 class JumpingDotsProgressIndicator extends StatefulWidget {
   final int numberOfDots;
@@ -18,14 +19,17 @@ class JumpingDotsProgressIndicator extends StatefulWidget {
 class _JumpingDotsProgressIndicatorState
     extends State<JumpingDotsProgressIndicator> with TickerProviderStateMixin {
   int numberOfDots;
-  List<AnimationController> controllers = [];
-  List<Animation<double>> animations = [];
-  List<Widget> _widgets = [];
 
   _JumpingDotsProgressIndicatorState({
     required this.numberOfDots,
   });
+
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: (i == 3) ? Text('....')
+        : (i == 2) ? Text('...')
+        : (i == 1) ? Text('..')
+        : Text('.'),
+    );
   }
 }
