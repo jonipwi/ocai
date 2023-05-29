@@ -123,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
               image: Svg(
                 color: Color.fromRGBO(190, 190, 190, 0.3),
                 source: SvgSource.network,
-                'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg',
+                'https://dogemazon.net/ocai/gptbtn.svg',
               ),
               fit: BoxFit.cover,
             ),
