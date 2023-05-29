@@ -1,6 +1,6 @@
-CREATE DATABASE ocaidb;
+CREATE DATABASE `ocaidb`;
 
-USE DATABASE ocaidb;
+USE `ocaidb`;
 
 CREATE TABLE `auths` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,

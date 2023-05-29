@@ -11,8 +11,9 @@ function chatGPT($q) {
 }
 if (trim($deviceid) == "") exit('not available!');
 
-$res = chatGPT($targetid);
-$res64 = base64_encode($res);
+$res    = chatGPT($targetid);
+$res64  = base64_encode($res);
+$status = 1;
 
 print $status . "|" . $res64;
 ?>

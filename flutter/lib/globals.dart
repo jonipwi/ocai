@@ -33,7 +33,7 @@ Future<Null> AskAI(String deviceid, String q) async{
         headers: qParams
     );
     if (responseData.statusCode == 200) {
-      //print(responseData.body);
+      print(responseData.body);
       final data = responseData.body.split('|');
       String decoded = utf8.decode(base64.decode(data[1]));
       Result = decoded;
