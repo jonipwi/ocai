@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   #svg_provider_cache:
   flutter_svg_provider:
+  http:
 
 dev_dependencies:
   flutter_test:

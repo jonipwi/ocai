@@ -34,6 +34,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController QAController = TextEditingController();
 
   void callPage(int page, String title) {
     setState(() {
@@ -44,11 +45,23 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void GPTDialogue() {
-    setState(() {
-      Question = 'How are you, AI?';
-      Answer = 'I am fine, thank you. And you?';
-      Result = '';
-    });
+    if (askHitReady == true) {
+      setState(() {
+        Question = '${QAController.text}';
+        Result = '';
+        Answer = '';
+        askHitReady = false;
+        AskAI('${deviceId}', '${Question}');
+      });
+    } else {
+      setState(() {
+        //QAController.clear();
+        Question = '';
+        Result = '';
+        Answer = '';
+        askHitReady = true;
+      });
+    }
     callPage(66, 'GPT Dialogue');
   }
 
@@ -56,6 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     callPage(0, 'Ocai');
+    askHitReady = false;
   }
 
   @override
@@ -158,7 +172,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                     child: Container(
-
+                      child: TextField(
+                        controller: QAController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Describe your story here',
+                        ),
+                      )
                     )
                 ),
               ) : Container(),
