@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:svg_provider_cache/svg_provider_cache.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+
 
 void main() {
   runApp(const MyApp());
