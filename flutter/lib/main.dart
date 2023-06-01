@@ -572,7 +572,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = Text('${(mean! - (std! * 3)).toStringAsFixed(2)}', style: style);
+        text = Text('Flesh', style: style);
         break;
       case 1:
         text = Text('${(mean! - (std! * 2)).toStringAsFixed(2)}', style: style);
@@ -590,7 +590,7 @@ class _MyHomePageState extends State<MyHomePage> {
         text = Text('${(mean! + (std! * 2)).toStringAsFixed(2)}', style: style);
         break;
       case 6:
-        text = Text('${(mean! + (std! * 3)).toStringAsFixed(2)}', style: style);
+        text = Text('Spirit', style: style);
         break;
       default:
         text = const Text('', style: style);

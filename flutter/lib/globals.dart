@@ -11,5 +11,5 @@ double mean = 0.0;
 double std = 0.0;
 
 const deviceId = 'AndroidX-23';
-const versi = '3.6.0+6';
+const versi = '3.7.0+7';
 const serverToken = "[SERVER_BASE_API_TOKEN]";
