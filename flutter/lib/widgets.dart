@@ -26,10 +26,10 @@ class _JumpingDotsProgressIndicatorState
 
   Widget build(BuildContext context) {
     return Container(
-      child: (i == 3) ? Text('....')
-        : (i == 2) ? Text('...')
-        : (i == 1) ? Text('..')
-        : Text('.'),
+      child: (i == 3) ? Text('....', style: TextStyle(fontWeight: FontWeight.bold))
+        : (i == 2) ? Text('...', style: TextStyle(fontWeight: FontWeight.bold))
+        : (i == 1) ? Text('..', style: TextStyle(fontWeight: FontWeight.bold))
+        : Text('.', style: TextStyle(fontWeight: FontWeight.bold)),
     );
   }
 }

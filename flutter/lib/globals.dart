@@ -9,5 +9,5 @@ int goToPage = 0;
 int i = 0;
 
 const deviceId = 'AndroidX-23';
-const versi = '3.0.0+3';
+const versi = '3.5.0+5';
 const serverToken = "[SERVER_BASE_API_TOKEN]";

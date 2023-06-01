@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 import 'widgets.dart';
 import 'globals.dart';
@@ -41,6 +42,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController QAController = TextEditingController();
 
+  List<Color> gradientColors = [
+    Colors.cyan,
+    Colors.blueAccent,
+  ];
+
+  bool showAvg = true;
   late Timer _timer;
 
   void startTimer() {
@@ -364,6 +371,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ],
                                   ),
 
+                                  //-----------Result Graph------------
+                                  AspectRatio(
+                                    aspectRatio: 1.70,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        right: 18,
+                                        left: 12,
+                                        top: 24,
+                                        bottom: 12,
+                                      ),
+                                      child: LineChart(
+                                        avgData(),
+                                      ),
+                                    ),
+                                  ),
+
                                 ],
                               )
                           ) : (loading == true) ? Padding(
@@ -414,4 +437,189 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  LineChartData avgData() {
+    return LineChartData(
+      lineTouchData: LineTouchData(enabled: false),
+      gridData: FlGridData(
+        show: true,
+        drawHorizontalLine: true,
+        drawVerticalLine: true,
+        horizontalInterval: 0.70,
+        verticalInterval: (3-0.55),
+        //checkToShowHorizontalLine: (value) {
+        //  return value.toInt() == 0;
+        //},
+        getDrawingHorizontalLine: (_) => FlLine(
+          color: Colors.blue,
+          dashArray: [8, 2],
+          strokeWidth: 0.8,
+        ),
+        getDrawingVerticalLine: (_) => FlLine(
+          color: Colors.blue,
+          dashArray: [8, 2],
+          strokeWidth: 0.8,
+        ),
+        //checkToShowVerticalLine: (value) {
+        //  return value.toInt() == 0;
+        //},
+      ),
+
+      /* gridData: FlGridData(
+        show: true,
+        drawHorizontalLine: true,
+        verticalInterval: 1,
+        horizontalInterval: 1,
+        getDrawingVerticalLine: (value) {
+          return FlLine(
+            color: Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
+        getDrawingHorizontalLine: (value) {
+          return FlLine(
+            color: Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
+      ), */
+      titlesData: FlTitlesData(
+        show: true,
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            getTitlesWidget: bottomTitleWidgets,
+            interval: 1,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: leftTitleWidgets,
+            reservedSize: 42,
+            interval: 1,
+          ),
+        ),
+        topTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        rightTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(color: const Color(0xff37434d)),
+      ),
+      minX: 0,
+      maxX: 6,
+      minY: 0,
+      maxY: 1,
+      lineBarsData: [
+        LineChartBarData(
+          spots: [
+            FlSpot(0, 0.0),
+            FlSpot(1, 0.06),
+            FlSpot(2, 0.32),
+            FlSpot(3, 0.99),
+            FlSpot(4, 0.32),
+            FlSpot(5, 0.06),
+            FlSpot(6, 0.0),
+          ],
+          isCurved: true,
+          gradient: LinearGradient(
+            colors: [
+              ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                  .lerp(0.2)!,
+              ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                  .lerp(0.2)!,
+            ],
+          ),
+          barWidth: 2,
+          isStrokeCapRound: true,
+          dotData: FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: [
+                ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                    .lerp(0.2)!
+                    .withOpacity(0.1),
+                ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                    .lerp(0.2)!
+                    .withOpacity(0.1),
+              ],
+            ),
+          ),
+        ),
+
+      ],
+    );
+  }
+
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    Widget text;
+    switch (value.toInt()) {
+      case 0:
+        text = const Text('-3', style: style);
+        break;
+      case 1:
+        text = const Text('-2', style: style);
+        break;
+      case 2:
+        text = const Text('-1', style: style);
+        break;
+      case 3:
+        text = const Text('0', style: style);
+        break;
+      case 4:
+        text = const Text('1', style: style);
+        break;
+      case 5:
+        text = const Text('2', style: style);
+        break;
+      case 6:
+        text = const Text('3', style: style);
+        break;
+      default:
+        text = const Text('', style: style);
+        break;
+    }
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: text,
+    );
+  }
+
+  Widget leftTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 15,
+    );
+    String text;
+    switch (value.toInt()) {
+      case 0:
+        text = '0.0';
+        break;
+      case 0.5:
+        text = '0.5';
+        break;
+      case 1:
+        text = '1.0';
+        break;
+      default:
+        return Container();
+    }
+
+    return Text(text, style: style, textAlign: TextAlign.left);
+  }
+
 }
