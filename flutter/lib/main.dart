@@ -100,8 +100,12 @@ class _MyHomePageState extends State<MyHomePage> {
           Result = decoded;
           Answer = Result;
           loading = false;
+          String smean = decoded.split('Mean: ')[1];
+          mean = double.parse(smean.split(',')[0]);
+          String sstd = decoded.split('Std: ')[1];
+          std = double.parse(sstd.split(',')[0]);
         });
-        print('$Answer');
+        print('$Answer \n$mean $std');
       }
     } catch (e) {
       print('Answer: Error Http!');
@@ -445,8 +449,8 @@ class _MyHomePageState extends State<MyHomePage> {
         show: true,
         drawHorizontalLine: true,
         drawVerticalLine: true,
-        horizontalInterval: 0.70,
-        verticalInterval: (3-0.55),
+        horizontalInterval: 0.5,
+        verticalInterval: (3-0.0),
         //checkToShowHorizontalLine: (value) {
         //  return value.toInt() == 0;
         //},
@@ -520,11 +524,11 @@ class _MyHomePageState extends State<MyHomePage> {
         LineChartBarData(
           spots: [
             FlSpot(0, 0.0),
-            FlSpot(1, 0.06),
-            FlSpot(2, 0.32),
-            FlSpot(3, 0.99),
-            FlSpot(4, 0.32),
-            FlSpot(5, 0.06),
+            FlSpot(1, 0.021),
+            FlSpot(2, 0.136),
+            FlSpot(3, 0.999),
+            FlSpot(4, 0.136),
+            FlSpot(5, 0.021),
             FlSpot(6, 0.0),
           ],
           isCurved: true,
@@ -562,31 +566,31 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      fontSize: 11,
     );
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = const Text('-3', style: style);
+        text = Text('${(mean! - (std! * 3)).toStringAsFixed(2)}', style: style);
         break;
       case 1:
-        text = const Text('-2', style: style);
+        text = Text('${(mean! - (std! * 2)).toStringAsFixed(2)}', style: style);
         break;
       case 2:
-        text = const Text('-1', style: style);
+        text = Text('${(mean! - (std! * 1)).toStringAsFixed(2)}', style: style);
         break;
       case 3:
-        text = const Text('0', style: style);
+        text = Text('${(mean!).toStringAsFixed(2)}', style: style);
         break;
       case 4:
-        text = const Text('1', style: style);
+        text = Text('${(mean! + (std! * 1)).toStringAsFixed(2)}', style: style);
         break;
       case 5:
-        text = const Text('2', style: style);
+        text = Text('${(mean! + (std! * 2)).toStringAsFixed(2)}', style: style);
         break;
       case 6:
-        text = const Text('3', style: style);
+        text = Text('${(mean! + (std! * 3)).toStringAsFixed(2)}', style: style);
         break;
       default:
         text = const Text('', style: style);
