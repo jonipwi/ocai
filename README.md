@@ -45,4 +45,4 @@ Open Church AI
 https://play.google.com/store/apps/details?id=com.sobatam.ocai.ocai
 
 # OCAI-3 Journey for Everyone
-https://github.com/jonipwi/ocai/edit/main/Intro.md
+https://github.com/jonipwi/ocai/blob/main/Intro.md
