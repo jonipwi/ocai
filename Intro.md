@@ -19,3 +19,6 @@ The best part? OCAI-3 is an open-source game, meaning it's freely available for 
 So, what are you waiting for? Embark on your OCAI-3 journey today, and discover the joy of balancing flesh and spirit in your daily life. Download the game now and unlock a world of personal growth and entertainment!
 
 Please note that OCAI-3 is a game that draws inspiration from religious teachings but is not affiliated with any specific religious organization. It aims to promote personal development and the exploration of spiritual and physical aspects of life in a inclusive and accessible manner.
+
+# UI/UX Design
+https://github.com/jonipwi/ocai/blob/main/ocai-1.jpeg
