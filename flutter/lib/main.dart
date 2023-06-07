@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:ocai/page1.dart';
 
 import 'widgets.dart';
 import 'globals.dart';
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Ocai AP68'),
+      home: MyPage1(title: 'Home'),
+      //home: const MyHomePage(title: 'Ocai AP68'),
     );
   }
 }
@@ -423,8 +425,8 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: GPTDialogue,
         tooltip: 'GPT Dialogue',
         child: Container(
-          width: 66.0,
-          height: 66.0,
+          width: iconWidth,
+          height: iconHeight,
           decoration: BoxDecoration(
             color: Colors.transparent,
             //const Color(0xff7c94b6),
