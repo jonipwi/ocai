@@ -22,3 +22,6 @@ Please note that OCAI-3 is a game that draws inspiration from religious teaching
 
 # UI/UX Design
 https://github.com/jonipwi/ocai/blob/main/ocai-2.png
+
+# Free download version 3.13.0+13
+https://dogemazon.net/ocai/app-release.apk
