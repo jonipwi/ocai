@@ -31,6 +31,7 @@ double mean = 0.0;
 double std = 0.0;
 String tempPath = '';
 String appDocPath = '';
+String verseToday = '';
 
 const btnColor = Color.fromRGBO(230, 230, 230, 0.9);
 

@@ -509,6 +509,46 @@ class _MyPage1State extends State<MyPage1> {
     });
   }
 
+  Future<Null> verseTodayAI(String deviceid, String q) async{
+
+    Map<String, String> qParams = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${serverToken}',
+      'x-device': '${deviceid}',
+      'x-target': '${q}',
+    };
+
+    setState(() {
+      loading = true;
+    });
+
+    String encoded = base64.encode(utf8.encode(q));
+    String fetchRequestUrl = "https://dogemazon.net/ocai/verse.php?q=${encoded}";
+    try {
+      final responseData = await http.get(
+          Uri.parse(fetchRequestUrl),
+          headers: qParams
+      );
+      if (responseData.statusCode == 200) {
+        //print(responseData.body);
+        final data = responseData.body.split('|');
+        String decoded = utf8.decode(base64.decode(data[1]));
+        setState(() {
+          Result = decoded;
+          Answer = Result;
+          loading = false;
+          verseToday = decoded;
+        });
+        print('$verseToday');
+        ttsParentSpeak('$verseToday');
+      }
+    } catch (e) {
+      print('Verse Today: Error Http!');
+    }
+
+  }
+
   Future<Null> AskAI(String deviceid, String q) async {
     Map<String, String> qParams = {
       'Content-type': 'application/json',
@@ -1052,6 +1092,7 @@ class _MyPage1State extends State<MyPage1> {
                                   btnIndex = 1;
                                 });
                                 print(btnIndex);
+                                verseTodayAI('${deviceId}','Please give me only 1 of quotes for today meditation');
                                 callPage(11, 'Community');
                               },
                               child: (btnIndex == 1)
@@ -1225,7 +1266,7 @@ class _MyPage1State extends State<MyPage1> {
                                 children: [
                                   CardWidget(width: width, height: height, color: Colors.white, ttsParentSpeak: ttsParentSpeak,
                                     avatar: '$bioAvatar', nick: '$nickName', gotoParentMenu: gotoParentMenu,
-                                    timestamp: '2 mins ago', story: 'Today, I embarked on a serene journey of meditation and prayer, surrendering to the tranquility that enveloped my being. As I settled into a comfortable position, I closed my eyes and allowed my breath to guide me inward. With each inhalation, I invited calmness and clarity, while exhaling all worries and distractions. In the stillness of the present moment, I connected with a profound sense of peace and centeredness. As I delved deeper into the depths of my consciousness, I sought solace and guidance through prayer, sending my intentions and gratitude to the universe. The gentle rhythm of my heartbeat echoed the harmony within, and a profound sense of interconnectedness washed over me. In this sacred space, I found solace, rejuvenation, and a renewed sense of purpose, leaving me with a tranquil heart and a mind filled with serenity.',
+                                    timestamp: '2 mins ago', story: '$verseToday',
                                     image: '', tag: '#meditation #pray #spiritual', datastr: '11,31,6,25',
                                   ),
 
