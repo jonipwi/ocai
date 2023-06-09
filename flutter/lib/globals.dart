@@ -14,9 +14,9 @@ String? nickName = '{anonymous}';
 String? deviceId = '';
 String? bioDes = 'Beauty enthusiast | ChatGPT nerd | Sharing my passion for good ';
 String? bioAvatar = 'https://dogemazon.net/ocai/user3.svg';
-int follower = 10;
-int following = 20;
-int posting = 100;
+int follower = 0;
+int following = 0;
+int posting = 0;
 
 int inPost = 0;
 bool loading = false;
@@ -35,7 +35,7 @@ String verseToday = '';
 
 const btnColor = Color.fromRGBO(230, 230, 230, 0.9);
 
-const versi = '3.13.0+13';
+const versi = '3.14.0+14';
 const serverToken = "[SERVER_BASE_API_TOKEN]";
 
 const double cardWidth = 166;

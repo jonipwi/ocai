@@ -275,11 +275,17 @@ class _MyPage1State extends State<MyPage1> {
             bioAvatar = resi['avatar'];
             String decoded = utf8.decode(base64.decode(resi['api']));
             AIKEY = decoded;
+            follower = resi['follower'];
+            following = resi['following'];
+            posting = resi['posting'];
           });
         } else {
           setState(() {
             isSignIn = false;
             AIKEY = '';
+            follower = 0;
+            following = 0;
+            posting = 0;
           });
         }
       } else if (resi['results'].contains('[OK]')) {
@@ -290,11 +296,17 @@ class _MyPage1State extends State<MyPage1> {
             bioAvatar = resi['avatar'];
             String decoded = utf8.decode(base64.decode(resi['api']));
             AIKEY = decoded;
+            follower = resi['follower'];
+            following = resi['following'];
+            posting = resi['posting'];
           });
         } else {
           setState(() {
             isSignIn = false;
             AIKEY = '';
+            follower = 0;
+            following = 0;
+            posting = 0;
           });
         }
       }
@@ -497,15 +509,16 @@ class _MyPage1State extends State<MyPage1> {
     String apiKey = "${AIKEY}";
     convertSpeechToText(apiKey, '${tempPath}/myOpenAI.m4a').then((value) {
       //print(value);
-      Future.delayed(const Duration(milliseconds: 500), () {
-        ttsSpeak(value!);
-      });
+      if (!value.toLowerCase().contains('error')) {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          ttsSpeak(value!);
+        });
 
-      setState(() {
-        QAResult = '${value}';
-        bioDes = '${value}';
-      });
-
+        setState(() {
+          QAResult = '${value}';
+          bioDes = '${value}';
+        });
+      }
     });
   }
 
@@ -589,6 +602,12 @@ class _MyPage1State extends State<MyPage1> {
     }
   }
 
+  void setFollowParent(String fid) {
+    inPost = 0;
+    //print('$deviceId:$fid');
+    String encoded = base64.encode(utf8.encode('$deviceId:$fid'));
+    postURL('https://dogemazon.net/ocai/follow.php', '$encoded', 'FOLLOW');
+  }
   void gotoParentMenu(int menu) {
     setState(() {
       menuIndex = menu;
@@ -1265,15 +1284,15 @@ class _MyPage1State extends State<MyPage1> {
                             child: Column(
                                 children: [
                                   CardWidget(width: width, height: height, color: Colors.white, ttsParentSpeak: ttsParentSpeak,
-                                    avatar: '$bioAvatar', nick: '$nickName', gotoParentMenu: gotoParentMenu,
-                                    timestamp: '2 mins ago', story: '$verseToday',
-                                    image: '', tag: '#meditation #pray #spiritual', datastr: '11,31,6,25',
+                                    avatar: '$bioAvatar', nick: '$nickName', gotoParentMenu: gotoParentMenu, creator: '4RAH1-L4MT9-PLZ7V-0E5HB',
+                                    timestamp: '2 mins ago', story: '$verseToday', setFollowParent: setFollowParent,
+                                    image: '', tag: '#meditation #pray #spiritual', datastr: '31,11,6,25',
                                   ),
 
-                                  CardWidget(width: width, height: height, color: Colors.white, ttsParentSpeak: ttsParentSpeak,
-                                    avatar: 'https://dogemazon.net/dodo/256x256/v3_0067345.jpg', nick: '$nickName', gotoParentMenu: gotoParentMenu,
-                                    timestamp: '2 mins ago', story: 'for God hath not given us the spirit of fear; but of power, and of love, and of a sound mind. 2 Timothy 1:7',
-                                    image: 'https://www.worldchallenge.org/sites/default/files/210707-pc-web.jpg', tag: '#meditation #pray #spiritual', datastr: '1,51,9,210',
+                                  CardWidget(width: width, height: height, color: Colors.white, ttsParentSpeak: ttsParentSpeak, setFollowParent: setFollowParent,
+                                    avatar: 'https://dogemazon.net/ocai/me.jpg', nick: '$nickName', gotoParentMenu: gotoParentMenu, creator: 'ETKN0-QRDU2-15NI6-0VQE0',
+                                    timestamp: '1 mins ago', story: 'For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind. 2 Timothy 1:7',
+                                    image: 'https://www.worldchallenge.org/sites/default/files/210707-pc-web.jpg', tag: '#meditation #pray #spiritual', datastr: '51,1,9,210',
                                   ),
 
                                 ]),
@@ -1521,9 +1540,10 @@ class _MyPage1State extends State<MyPage1> {
                                       child: Text(' Edit Bio'),
                                     ),
                                   ]),
-                              ),
                             ),
                           ),
+                        ),
+                        SizedBox(height: 50),
 
                       ],
                     ),
@@ -2071,12 +2091,14 @@ class CardWidget extends StatelessWidget {
   final String story;
   final String tag;
   final String datastr;
+  final String creator;
   final Function gotoParentMenu;
   final Function ttsParentSpeak;
+  final Function setFollowParent;
 
   CardWidget({Key? key, required this.width, required this.height, required this.color, required this.ttsParentSpeak,
-    required this.avatar, required this.nick, required this.timestamp, required this.image,
-    required this.story, required this.tag, required this.datastr, required this.gotoParentMenu})
+    required this.avatar, required this.nick, required this.timestamp, required this.image, required this.creator,
+    required this.story, required this.tag, required this.datastr, required this.gotoParentMenu, required this.setFollowParent})
       : super(key: key);
 
   @override
@@ -2177,7 +2199,8 @@ class CardWidget extends StatelessWidget {
                   //Button Like
                   GestureDetector(
                     onTap: (){
-                      gotoParentMenu(0);
+                      //gotoParentMenu(0);
+                      setFollowParent('$creator');
                     },
                     child: Container(
                         width: (width - 40) / 5,
@@ -2205,7 +2228,8 @@ class CardWidget extends StatelessWidget {
                   //Button Dislike
                   GestureDetector(
                     onTap: (){
-                      gotoParentMenu(0);
+                      //gotoParentMenu(0);
+                      setFollowParent('$creator');
                     },
                     child: Container(
                         width: (width - 40) / 5,
@@ -2234,6 +2258,7 @@ class CardWidget extends StatelessWidget {
                   GestureDetector(
                     onTap: (){
                       //gotoParentMenu(0);
+                      setFollowParent('$creator');
                       Future.delayed(const Duration(milliseconds: 500), () {
                         ttsParentSpeak('$story');
                       });
@@ -2264,7 +2289,8 @@ class CardWidget extends StatelessWidget {
                   //Button Share
                   GestureDetector(
                     onTap: (){
-                      gotoParentMenu(0);
+                      //gotoParentMenu(0);
+                      setFollowParent('$creator');
                     },
                     child: Container(
                         width: (width - 40) / 5,
