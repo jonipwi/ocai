@@ -43,7 +43,7 @@ Open Church AI
 
 # GPT Prompt
 1. Quote and Verse Today #meditaion #pray #spiritual is:
-    "Please give me 1 quote and 1 verse for today that support to be trained become a highest ethical nobleman should meditating on" - as can be found on verse.php
+    "Please give me 1 quote and 1 verse for today that support to be trained become a highest ethical nobleman should meditating on" - as can be found on https://github.com/jonipwi/ocai/blob/main/php/verse.php
 
 # playstore
 https://play.google.com/store/apps/details?id=com.sobatam.ocai.ocai
