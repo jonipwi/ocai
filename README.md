@@ -48,7 +48,7 @@ Open Church AI
 # playstore
 https://play.google.com/store/apps/details?id=com.sobatam.ocai.ocai
 
-# Free download version 3.13.0+13
+# Free download version 3.14.0+14
 https://dogemazon.net/ocai/app-release.apk
 
 # Youtube - the flow

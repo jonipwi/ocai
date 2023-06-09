@@ -249,6 +249,14 @@ class _MyPage1State extends State<MyPage1> {
     if (inPost <= 0) {
       inPost++;
 
+      Map<String, String> qParams = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${serverToken}',
+        'x-device': '${deviceId}',
+        'x-target': '${data}',
+      };
+
       var map = new Map<String, dynamic>();
       map['data'] = '${data}';
 
@@ -258,7 +266,7 @@ class _MyPage1State extends State<MyPage1> {
 
       var url = Uri.parse(Url);
       final response = await http.post(
-          url, body: map, headers: headers);
+          url, body: map, headers: qParams);
 
       String rawJson = response.body.toString();
       Map<String, dynamic> resi = jsonDecode(rawJson);
