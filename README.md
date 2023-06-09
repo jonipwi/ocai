@@ -41,6 +41,10 @@ Open Church AI
 3. If the church does not have a team dedicated to online service, it can lead to a lack of customer service and slow response times. 
 4. If the church does not have adequate security measures in place, then it could be exposed to malicious attacks.
 
+# GPT Prompt
+1. Quote and Verse Today #meditaion #pray #spiritual is:
+    "Please give me 1 quote and 1 verse for today that support to be trained become a highest ethical nobleman should meditating on" - as can be found on verse.php
+
 # playstore
 https://play.google.com/store/apps/details?id=com.sobatam.ocai.ocai
 
