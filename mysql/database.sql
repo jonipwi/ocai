@@ -27,3 +27,28 @@ CREATE TABLE `iplog` (
   PRIMARY KEY (`id`),
   KEY `SECONDARY` (`ip`,`uid`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `follow` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) unsigned NOT NULL COMMENT 'user',
+  `fid` bigint(20) unsigned NOT NULL COMMENT 'friend',
+  `dt` datetime NOT NULL COMMENT 'dt.follow',
+  `data` longtext NOT NULL COMMENT 'details',
+  `stat` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `SECONDARY` (`uid`,`fid`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `story` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) unsigned NOT NULL COMMENT 'creator',
+  `dt` datetime NOT NULL,
+  `data` longtext NOT NULL COMMENT 'context',
+  `photo` longtext NOT NULL COMMENT 'url',
+  `img` longtext NOT NULL COMMENT 'base64',
+  `stat` int(10) unsigned NOT NULL,
+  `tag` longtext NOT NULL COMMENT '#users',
+  PRIMARY KEY (`id`),
+  KEY `SECONDARY` (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
