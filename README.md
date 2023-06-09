@@ -47,5 +47,8 @@ https://play.google.com/store/apps/details?id=com.sobatam.ocai.ocai
 # Free download version 3.13.0+13
 https://dogemazon.net/ocai/app-release.apk
 
+# Youtube - the flow
+https://www.youtube.com/watch?v=q4JWYb-DSDU
+
 # OCAI-3 Journey for Everyone
 https://github.com/jonipwi/ocai/blob/main/Intro.md

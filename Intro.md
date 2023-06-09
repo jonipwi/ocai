@@ -25,3 +25,6 @@ https://github.com/jonipwi/ocai/blob/main/ocai-2.png
 
 # Free download version 3.13.0+13
 https://dogemazon.net/ocai/app-release.apk
+
+# Youtube - the flow
+https://www.youtube.com/watch?v=q4JWYb-DSDU
