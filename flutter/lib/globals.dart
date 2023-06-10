@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,9 +34,11 @@ String tempPath = '';
 String appDocPath = '';
 String verseToday = '';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 const btnColor = Color.fromRGBO(230, 230, 230, 0.9);
 
-const versi = '3.14.0+14';
+const versi = '3.15.0+15';
 const serverToken = "[SERVER_BASE_API_TOKEN]";
 
 const double cardWidth = 166;
@@ -46,6 +49,35 @@ const double buttonHeight = 50;
 
 const double iconWidth = 28;
 const double iconHeight = 28;
+
+DateTime dtVerseToday = DateFormat("yyyy-MM-dd HH:mm:ss").parse(DateTime.now().toString());
+DateTime dateToday = DateFormat("yyyy-MM-dd HH:mm:ss").parse(DateTime.now().toString());
+
+String DateDiff(String date1, String date2) {
+
+  DateTime datetime1 = DateFormat("yyyy-MM-dd HH:mm:ss").parse(date1);
+  DateTime datetime2 = DateFormat("yyyy-MM-dd HH:mm:ss").parse(date2);
+
+  Duration timeDiff = datetime2.difference(datetime1);
+
+  int days = timeDiff.inDays;
+  int hours = (timeDiff.inHours % 24);
+  int minutes = (timeDiff.inMinutes % 60);
+  int seconds = 60 - (timeDiff.inSeconds % 60);
+
+  String result = '';
+  if (days > 0) {
+    result = '$days day ago';
+  } else if (hours > 0) {
+    result = '$hours hour ago';
+  } else if (minutes > 0) {
+    result = '$minutes min ago';
+  } else if (seconds > 0) {
+    result = '$seconds sec ago';
+  }
+
+  return (result);
+}
 
 Future<String> getDirPath(String tipe) async {
   switch(tipe) {

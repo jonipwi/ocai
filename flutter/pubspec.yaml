@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 3.14.0+14
+version: 3.15.0+15
 #version 3.6.0+6: Update Distribution Graph (data not sync yet).
 #version 3.7.0+7: Sync dynamic data to distribution graph (plotting).
 #version 3.8.0+8: New UI/UX Design.
@@ -25,8 +25,8 @@ version: 3.14.0+14
 #version 3.11.0+11: Bio Profile.
 #version 3.12.0+12: Communities & Networks.
 #version 3.13.0+13: 1 Quote 1 Verse Today for Noble Practicer
-#version 3.14.0+14: Follower & Following, Comments.
-#version 3.15.0+15: Comments.
+#version 3.14.0+14: Follower & Following, Comments. Not complete features. Still need some works
+#version 3.15.0+15: Date Difference, Fix Error TicketID, Update Security.
 
 environment:
   sdk: '>=3.1.0-117.0.dev <4.0.0'
@@ -58,6 +58,7 @@ dependencies:
   path_provider:
   record:
   flutter_tts:
+  intl:
 
 dev_dependencies:
   flutter_test:

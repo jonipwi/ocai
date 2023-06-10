@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:async';
 import 'dart:io' show File, Platform;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
@@ -92,7 +94,7 @@ class _MyPage1State extends State<MyPage1> {
           setState(() {
             i--;
             //------ get datetime -----
-            DateTime dateToday = new DateTime.now();
+            dateToday = DateFormat("yyyy-MM-dd HH:mm:ss").parse(DateTime.now().toString());
           });
         }
       },
@@ -269,10 +271,13 @@ class _MyPage1State extends State<MyPage1> {
           url, body: map, headers: qParams);
 
       String rawJson = response.body.toString();
+      if (rawJson.toLowerCase().contains('error')) {
+        BuildContext? context = navigatorKey.currentContext;
+        ScaffoldMessenger.of(context!).showSnackBar(
+            SnackBar(content: Text('raw: ${rawJson}')));
+      }
       Map<String, dynamic> resi = jsonDecode(rawJson);
       //print('DATA: ${resi['uuid']} -> ${resi['results']} ');
-      //ScaffoldMessenger.of(context).showSnackBar(
-      //    SnackBar(content: Text('Data: ${resi['results']}')));
       hasil = '';
       if ((resi['uuid'].contains(deviceId)) &&
           (resi['results'].contains('[OK]'))) {
@@ -553,6 +558,7 @@ class _MyPage1State extends State<MyPage1> {
       );
       if (responseData.statusCode == 200) {
         //print(responseData.body);
+        dtVerseToday = DateTime.now();
         final data = responseData.body.split('|');
         String decoded = utf8.decode(base64.decode(data[1]));
         setState(() {
@@ -1293,7 +1299,7 @@ class _MyPage1State extends State<MyPage1> {
                                 children: [
                                   CardWidget(width: width, height: height, color: Colors.white, ttsParentSpeak: ttsParentSpeak,
                                     avatar: '$bioAvatar', nick: '$nickName', gotoParentMenu: gotoParentMenu, creator: '4RAH1-L4MT9-PLZ7V-0E5HB',
-                                    timestamp: '2 mins ago', story: '$verseToday', setFollowParent: setFollowParent,
+                                    timestamp: DateDiff(dateToday.toString(), dtVerseToday.toString()), story: '$verseToday', setFollowParent: setFollowParent,
                                     image: '', tag: '#meditation #pray #spiritual', datastr: '31,11,6,25',
                                   ),
 
@@ -2331,5 +2337,4 @@ class CardWidget extends StatelessWidget {
       ),
     );
   }
-
 }
