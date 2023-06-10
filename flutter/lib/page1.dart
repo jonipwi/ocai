@@ -20,6 +20,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:record/record.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'catalog.dart';
 import 'globals.dart';
 
 class MyPage1 extends StatefulWidget {
@@ -59,6 +60,7 @@ class _MyPage1State extends State<MyPage1> {
   bool get isWeb => kIsWeb;
 
   TextEditingController QAController = TextEditingController();
+  TextEditingController EditController = TextEditingController();
 
   List<Color> gradientColors = [
     Colors.cyan,
@@ -109,6 +111,7 @@ class _MyPage1State extends State<MyPage1> {
     _imageFileList = value == null ? null : <XFile>[value];
   }
   static final String uploadEndPoint = 'https://dogemazon.net/ocai/upload.php';
+  static final String uploadEndPoint2 = 'https://dogemazon.net/ocai/posting.php';
   late Future<File> file;
   String status = '';
   late String base64Image;
@@ -151,6 +154,94 @@ class _MyPage1State extends State<MyPage1> {
     await File(originalPath).copy(newFilePath);
 
     return XFile(newFilePath);
+  }
+
+  setDeleteParent(String imgId) {
+    http.post(
+        Uri.parse('https://dogemazon.net/ocai/del.php'),
+        body: {
+          "deviceid": deviceId,
+          "imgid" : imgId,
+        }
+    ).then((result) {
+      //print(result.body.toString());
+      if (result.statusCode == 200) {
+        //setState(() {
+        BuildContext? context = navigatorKey.currentContext;
+        ScaffoldMessenger.of(context!).showSnackBar(
+            SnackBar(content: Text('Deleted: ${imgId}')));
+        //});
+        getStoryAI(deviceId!, 'STORY');
+      }
+      setStatus(result.statusCode == 200 ? result.body : errMessage);
+    }).catchError((error) {
+      setStatus(error);
+    });
+  }
+
+  setPostParent() async {
+    // Pick an image.
+    try {
+      PickedFile? pickedFile = await ImagePicker().getImage(
+        source: ImageSource.gallery,
+        maxHeight: 512,
+        maxWidth: 512 * (16/9),
+      );
+      if (pickedFile != null) {
+        File photo = File(pickedFile.path);
+        if (photo != null) {
+          setState(() {
+            tmpFile = File(photo!.path);
+            base64Image = base64Encode(tmpFile.readAsBytesSync());
+          });
+        }
+      }
+    } catch (e) {
+      setState(() {
+        _pickImageError = e;
+      });
+    }
+
+    startUploadPosting();
+  }
+
+  startUploadPosting() {
+    setStatus('Uploading Posting Image...');
+    if (null == tmpFile) {
+      setStatus(errMessage);
+      return;
+    }
+    String fileName = tmpFile.path.split('/').last;
+    print(fileName);
+    uploadPosting(fileName);
+  }
+
+  uploadPosting(String fileName) {
+    http.post(
+        Uri.parse(uploadEndPoint2),
+        body: {
+          "image": base64Image,
+          "name": fileName,
+          "deviceid": deviceId,
+          "imgDes" : postText,
+        }
+    ).then((result) {
+      //print(result.body.toString());
+      if (result.statusCode == 200) {
+        //setState(() {
+          final data = jsonDecode(result.body);
+          //print(' ${data['photo']} \n ${data['message']}');
+          //if (data['photo'] != '') bioAvatar = data['photo'];
+          BuildContext? context = navigatorKey.currentContext;
+          ScaffoldMessenger.of(context!).showSnackBar(
+              SnackBar(content: Text('${data['message']}')));
+        //});
+          getStoryAI(deviceId!, 'STORY');
+      }
+      setStatus(result.statusCode == 200 ? result.body : errMessage);
+    }).catchError((error) {
+      setStatus(error);
+    });
   }
 
   setFileParent() async {
@@ -487,14 +578,27 @@ class _MyPage1State extends State<MyPage1> {
     }
   }
 
+  void ttsMute() async {
+    await flutterTts.setVolume(0);
+    setState(() {
+      muteOn = true;
+    });
+  }
+
   void ttsParentSpeak(String text) {
     ttsStop();
+    setState(() {
+      muteOn = false;
+    });
     Future.delayed(const Duration(milliseconds: 500), () {
       ttsSpeak(text!);
     });
   }
 
   Future ttsStop() async {
+    setState(() {
+      muteOn = true;
+    });
     var result = await flutterTts.stop();
     if (result == 1) setState(() => ttsState = TtsState.stopped);
   }
@@ -569,6 +673,56 @@ class _MyPage1State extends State<MyPage1> {
         });
         print('$verseToday');
         ttsParentSpeak('$verseToday');
+      }
+    } catch (e) {
+      print('Verse Today: Error Http!');
+    }
+
+  }
+
+  Future<void> getStoryAI(String deviceid, String q) async{
+
+    Map<String, String> qParams = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${serverToken}',
+      'x-device': '${deviceid}',
+      'x-target': '${q}',
+    };
+
+    setState(() {
+      listStory.clear();
+      loading = true;
+    });
+
+    String encoded = base64.encode(utf8.encode(q));
+    String fetchRequestUrl = "https://dogemazon.net/ocai/story.php?q=${encoded}";
+    try {
+      final responseData = await http.get(
+          Uri.parse(fetchRequestUrl),
+          headers: qParams
+      );
+      if (responseData.statusCode == 200) {
+        //print(responseData.body);
+        setState(() {
+          final data = jsonDecode(responseData.body);
+          print(' ${data['uuid']} \n ${data['message']}');
+          //if (data['photo'] != '') bioAvatar = data['photo'];
+          String QAStory = utf8.decode(base64.decode(data['story']));
+          //print('Story: ${QAStory}');
+          final js = json.decode(QAStory!);
+          int id = 0;
+          for(var json in js['json']) {
+            print(json["avatar"]);
+            listStory.add(Story(id: json["id"], avatar: '${json["avatar"]}', nick: '${json["nick"]}', data: '${json["data"]}', photo: '${json["photo"]}', tipe: '${json["tipe"]}', tags: '${json["tags"]}', btnstat: '${json["btnstat"]}', uuid: '${json["uuid"]}', timestamp: '${json["timestamp"]}'));
+            id++;
+          }
+          print(listStory.length);
+
+          //BuildContext? context = navigatorKey.currentContext;
+          //ScaffoldMessenger.of(context!).showSnackBar(
+          //    SnackBar(content: Text('${data['message']}')));
+        });
       }
     } catch (e) {
       print('Verse Today: Error Http!');
@@ -694,6 +848,7 @@ class _MyPage1State extends State<MyPage1> {
       await postURL('https://dogemazon.net/ocai/log.php', '${deviceId}', 'PROFILE');
       if (isSignIn) {
         print('1.UUID: $deviceId');
+        await getStoryAI(deviceId!, 'STORY');
       }
     } else {
       //Generate Id
@@ -715,6 +870,7 @@ class _MyPage1State extends State<MyPage1> {
         deviceId = temp;
         saveProfile('${deviceId}');
         print('3.UUID: $deviceId');
+        await getStoryAI(deviceId!, 'STORY');
       }
     }
 
@@ -732,6 +888,7 @@ class _MyPage1State extends State<MyPage1> {
     askHitReady = false;
     btnIndex = 0;
     menuIndex = 0;
+
   }
 
   @override
@@ -1264,10 +1421,22 @@ class _MyPage1State extends State<MyPage1> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Community', style: TextStyle(fontFamily: 'Righteous', color: Colors.black, fontSize: 20)),
+                                Row(
+                                    children: [
+                                      Text('Community', style: TextStyle(fontFamily: 'Righteous', color: Colors.black, fontSize: 20)),
+                                      SizedBox(width: 5),
+                                      GestureDetector(
+                                        onTap: () {
+                                          //postUpload();
+                                          ttsStop();
+                                        },
+                                        child: (muteOn) ? Icon(Icons.volume_off) : Icon(Icons.volume_up)
+                                      ),
+                                    ]),
                                 GestureDetector(
                                   onTap: () {
                                     //postUpload();
+                                    setPostParent();
                                   },
                                   child: Container(
                                     width: 26,
@@ -1297,17 +1466,58 @@ class _MyPage1State extends State<MyPage1> {
                           child: SingleChildScrollView(
                             child: Column(
                                 children: [
-                                  CardWidget(width: width, height: height, color: Colors.white, ttsParentSpeak: ttsParentSpeak,
-                                    avatar: '$bioAvatar', nick: '$nickName', gotoParentMenu: gotoParentMenu, creator: '4RAH1-L4MT9-PLZ7V-0E5HB',
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                                    child: TextField(
+                                      style: TextStyle(fontSize: 13.0),
+                                      controller: EditController,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          postText = val;
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        labelText: 'Enter image description ...',
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(5.0),
+                                        ),
+                                      ),
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                  CardWidget(width: width, height: height, color: Colors.white, imgId: '0', ttsParentSpeak: ttsParentSpeak, setDeleteParent: setDeleteParent,
+                                    avatar: 'https://dogemazon.net/ocai/chatgptbtn.svg', nick: '$nickName', gotoParentMenu: gotoParentMenu, creator: '4RAH1-L4MT9-PLZ7V-0E5HB',
                                     timestamp: DateDiff(dateToday.toString(), dtVerseToday.toString()), story: '$verseToday', setFollowParent: setFollowParent,
                                     image: '', tag: '#meditation #pray #spiritual', datastr: '31,11,6,25',
                                   ),
 
-                                  CardWidget(width: width, height: height, color: Colors.white, ttsParentSpeak: ttsParentSpeak, setFollowParent: setFollowParent,
+                                  CardWidget(width: width, height: height, color: Colors.white, imgId: '0', ttsParentSpeak: ttsParentSpeak, setFollowParent: setFollowParent, setDeleteParent: setDeleteParent,
                                     avatar: 'https://dogemazon.net/ocai/me.jpg', nick: '$nickName', gotoParentMenu: gotoParentMenu, creator: 'ETKN0-QRDU2-15NI6-0VQE0',
                                     timestamp: '1 mins ago', story: 'For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind. 2 Timothy 1:7',
                                     image: 'https://www.worldchallenge.org/sites/default/files/210707-pc-web.jpg', tag: '#meditation #pray #spiritual', datastr: '51,1,9,210',
                                   ),
+
+                                  for (var i = 0; i < listStory.length; i++)
+                                    CardWidget(
+                                      width: width,
+                                      height: height,
+                                      color: Colors.white,
+                                      imgId: '${listStory[i].id}',
+                                      setDeleteParent: setDeleteParent,
+                                      ttsParentSpeak: ttsParentSpeak,
+                                      setFollowParent: setFollowParent,
+                                      avatar: '${listStory[i].avatar}',
+                                      nick: '${listStory[i].nick}',
+                                      gotoParentMenu: gotoParentMenu,
+                                      creator: '${listStory[i].uuid}',
+                                      timestamp: DateDiff(dateToday.toString(), '${listStory[i].timestamp}'),
+                                      story: '${listStory[i].data}',
+                                      image: '${listStory[i].photo}',
+                                      tag: '${listStory[i].tags}',
+                                      datastr: '${listStory[i].btnstat}',
+                                    ),
 
                                 ]),
                           ),
@@ -2098,6 +2308,7 @@ class CardWidget extends StatelessWidget {
   final double width;
   final double height;
   final Color color;
+  final String imgId;
   final String avatar;
   final String nick;
   final String timestamp;
@@ -2109,9 +2320,10 @@ class CardWidget extends StatelessWidget {
   final Function gotoParentMenu;
   final Function ttsParentSpeak;
   final Function setFollowParent;
+  final Function setDeleteParent;
 
-  CardWidget({Key? key, required this.width, required this.height, required this.color, required this.ttsParentSpeak,
-    required this.avatar, required this.nick, required this.timestamp, required this.image, required this.creator,
+  CardWidget({Key? key, required this.width, required this.height, required this.color, required this.imgId, required this.ttsParentSpeak,
+    required this.avatar, required this.nick, required this.timestamp, required this.image, required this.creator, required this.setDeleteParent,
     required this.story, required this.tag, required this.datastr, required this.gotoParentMenu, required this.setFollowParent})
       : super(key: key);
 
@@ -2170,8 +2382,17 @@ class CardWidget extends StatelessWidget {
                       Text(' $nick', style: TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.bold)),
                     ],
                   ),
-                  //Time
-                  Text('$timestamp', style: TextStyle(color: Colors.grey, fontSize: 11)),
+                  Row(
+                    children: [
+                      Text('$timestamp', style: TextStyle(color: Colors.grey, fontSize: 11)),
+                      SizedBox(width: 10),
+                      (creator == deviceId) ? GestureDetector(
+                        onTap: () {
+                          setDeleteParent(imgId);
+                        },
+                        child: Icon(Icons.delete_outline, color: Colors.black87, size: 20),
+                      ) : Container(),
+                  ]),
                 ],
               ),
               SizedBox(height: 3),

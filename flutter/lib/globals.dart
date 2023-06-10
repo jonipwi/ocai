@@ -7,10 +7,12 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'catalog.dart';
+
 String? Question = '';
 String? Answer = '';
 String? Result = '';
-
+String? postText = '';
 String? nickName = '{anonymous}';
 String? deviceId = '';
 String? bioDes = 'Beauty enthusiast | ChatGPT nerd | Sharing my passion for good ';
@@ -19,10 +21,12 @@ int follower = 0;
 int following = 0;
 int posting = 0;
 
+List<Story> listStory = [];
 int inPost = 0;
 bool loading = false;
 bool askHitReady = false;
 bool micOn = false;
+bool muteOn = false;
 String AIKEY = '';
 String QAResult = '';
 String? titlePage = 'Project 68AP';
@@ -38,7 +42,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 const btnColor = Color.fromRGBO(230, 230, 230, 0.9);
 
-const versi = '3.15.0+15';
+const versi = '3.16.0+16';
 const serverToken = "[SERVER_BASE_API_TOKEN]";
 
 const double cardWidth = 166;
