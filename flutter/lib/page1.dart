@@ -224,6 +224,7 @@ class _MyPage1State extends State<MyPage1> {
           "name": fileName,
           "deviceid": deviceId,
           "imgDes" : postText,
+          "gpt" : bioDes,
         }
     ).then((result) {
       //print(result.body.toString());
@@ -338,7 +339,7 @@ class _MyPage1State extends State<MyPage1> {
     });
   }
 
-  Future<void> postURL(String Url, String data, String page) async {
+  Future<void> postURL(String Url, String data, String page, String q) async {
     if (inPost <= 0) {
       inPost++;
 
@@ -347,7 +348,7 @@ class _MyPage1State extends State<MyPage1> {
         'Accept': 'application/json',
         'Authorization': 'Bearer ${serverToken}',
         'x-device': '${deviceId}',
-        'x-target': '${data}',
+        'x-target': '${q}',
       };
 
       var map = new Map<String, dynamic>();
@@ -382,6 +383,7 @@ class _MyPage1State extends State<MyPage1> {
             follower = resi['follower'];
             following = resi['following'];
             posting = resi['posting'];
+            bioDes = resi['gpt'];
           });
         } else {
           setState(() {
@@ -774,7 +776,7 @@ class _MyPage1State extends State<MyPage1> {
     inPost = 0;
     //print('$deviceId:$fid');
     String encoded = base64.encode(utf8.encode('$deviceId:$fid'));
-    postURL('https://dogemazon.net/ocai/follow.php', '$encoded', 'FOLLOW');
+    postURL('https://dogemazon.net/ocai/follow.php', '$encoded', 'FOLLOW', '$bioDes');
   }
   void gotoParentMenu(int menu) {
     setState(() {
@@ -845,7 +847,7 @@ class _MyPage1State extends State<MyPage1> {
     if ((chk != null) && (chk.toString().trim().length > 0)) {
       //Post Logging
       inPost = 0;
-      await postURL('https://dogemazon.net/ocai/log.php', '${deviceId}', 'PROFILE');
+      await postURL('https://dogemazon.net/ocai/log.php', '${deviceId}', 'PROFILE', '$bioDes');
       if (isSignIn) {
         print('1.UUID: $deviceId');
         await getStoryAI(deviceId!, 'STORY');
@@ -860,8 +862,7 @@ class _MyPage1State extends State<MyPage1> {
           temp = await generateRandomString();
           //print('2.UUID: $temp');
           inPost = 0;
-          await postURL(
-              'https://dogemazon.net/ocai/log.php', '${temp}', 'PROFILE');
+          await postURL('https://dogemazon.net/ocai/log.php', '${temp}', 'PROFILE', '$bioDes');
         } else {
           i = 10;
         }
