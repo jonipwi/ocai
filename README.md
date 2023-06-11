@@ -56,8 +56,8 @@ https://play.google.com/store/apps/details?id=com.sobatam.ocai.ocai
 Note: Set own Bio to customized own related 1 quote 1 verse for the day.
 https://dogemazon.net/ocai/app-release.apk 
 
-# Youtube - the flow
-https://www.youtube.com/watch?v=q4JWYb-DSDU
+# Youtube - the flow customization of Self Cultivation & Meditation 
+https://www.youtube.com/watch?v=o8XkdaxmfjQ
 
 # OCAI-3 Journey for Everyone
 https://github.com/jonipwi/ocai/blob/main/Intro.md

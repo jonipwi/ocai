@@ -27,8 +27,8 @@ https://github.com/jonipwi/ocai/blob/main/ocai-2.png
 Note: Set own Bio to customized own related 1 quote 1 verse for the day.
 https://dogemazon.net/ocai/app-release.apk 
 
-# Youtube - the flow
-https://www.youtube.com/watch?v=q4JWYb-DSDU
+# Youtube - the flow customization of Self Cultivation & Meditation 
+https://www.youtube.com/watch?v=o8XkdaxmfjQ
 
 # eg. violation blocked at advanced posting before publication
 https://github.com/jonipwi/ocai/blob/main/screenshot/sample%20violation%20blocked%20posting.png
