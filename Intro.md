@@ -29,3 +29,6 @@ https://dogemazon.net/ocai/app-release.apk
 
 # Youtube - the flow
 https://www.youtube.com/watch?v=q4JWYb-DSDU
+
+# eg. violation blocked at advanced posting before publication
+https://github.com/jonipwi/ocai/blob/main/screenshot/sample%20violation%20blocked%20posting.png

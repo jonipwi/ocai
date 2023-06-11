@@ -10,3 +10,6 @@
 
 Regards,
 OCAI-3 & SoBatamDotCom Team
+
+# eg. violation blocked at advanced posting before publication
+https://github.com/jonipwi/ocai/blob/main/screenshot/sample%20violation%20blocked%20posting.png

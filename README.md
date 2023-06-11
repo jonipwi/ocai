@@ -11,6 +11,9 @@ Open Church AI
 
 # safety
 1. With AI helps, it is possible to solved the problems in social media like as abused words, explicit words, bullying words, terrors indicator and much more done automatically.
+==> eg. violation blocked at advanced posting before publication
+https://github.com/jonipwi/ocai/blob/main/screenshot/sample%20violation%20blocked%20posting.png
+
 2. It is also may be integrated to make reporting to the institution directly according to the status of urgency.
 3. This Open Church AI community have a highest commitment not to collecting any data of private information of the users.
 4. The data will be pear to pear user customized encrypted.
@@ -57,3 +60,6 @@ https://www.youtube.com/watch?v=q4JWYb-DSDU
 
 # OCAI-3 Journey for Everyone
 https://github.com/jonipwi/ocai/blob/main/Intro.md
+
+# eg. violation blocked at advanced posting before publication
+https://github.com/jonipwi/ocai/blob/main/screenshot/sample%20violation%20blocked%20posting.png
