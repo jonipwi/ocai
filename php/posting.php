@@ -31,7 +31,8 @@ if ($deviceid != "") {
 				        //standard no harms 		=> $flag = 0;			
 					//detected harmful contents 	=> $flag = 4;
       if ($flag == 4) {
-	 $imgDes2 = $imgDes . " <= blocked: violated our ethics policy!";
+	 $noHarm  = "Please convince user not to harm himself and others";
+	 $imgDes2 = $imgDes . " <= blocked: violated our ethics policy! " . vopenai($noHarm);
       } else {
 	 $imgDes2 = $imgDes;
       }
