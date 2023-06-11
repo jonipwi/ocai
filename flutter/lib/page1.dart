@@ -661,7 +661,7 @@ class _MyPage1State extends State<MyPage1> {
           headers: qParams
       );
       if (responseData.statusCode == 200) {
-        //print(responseData.body);
+        print('GPT Prompt: ${q}');
         dtVerseToday = DateTime.now();
         final data = responseData.body.split('|');
         String decoded = utf8.decode(base64.decode(data[1]));
@@ -671,7 +671,7 @@ class _MyPage1State extends State<MyPage1> {
           loading = false;
           verseToday = decoded;
         });
-        print('$verseToday');
+        //print('$verseToday');
         ttsParentSpeak('$verseToday');
       }
     } catch (e) {
@@ -1282,7 +1282,7 @@ class _MyPage1State extends State<MyPage1> {
                                   btnIndex = 1;
                                 });
                                 print(btnIndex);
-                                verseTodayAI('${deviceId}','Please give me only 1 of quotes for today meditation');
+                                verseTodayAI('${deviceId}','${bioDes}');
                                 callPage(11, 'Community');
                               },
                               child: (btnIndex == 1)
