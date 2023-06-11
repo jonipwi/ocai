@@ -44,10 +44,11 @@ https://github.com/jonipwi/ocai/blob/main/screenshot/sample%20violation%20blocke
 3. If the church does not have a team dedicated to online service, it can lead to a lack of customer service and slow response times. 
 4. If the church does not have adequate security measures in place, then it could be exposed to malicious attacks.
 
-# GPT Prompt
-1. Quote and Verse Today #meditaion #pray #spiritual is:
-    "Please give me 1 quote and 1 verse for today that support to be trained become a highest ethical nobleman should meditating on" - as can be found on https://github.com/jonipwi/ocai/blob/main/php/verse.php
-
+# GPT Prompt (v3.17.0+17 or above)
+1. Quote and Verse Today #meditaion #pray #spiritual is changed according to Bio customization:
+   Where the code is trying to find a quote and a verse that support the idea of becoming a highly ethical nobleman through meditation. If the initial response is not satisfactory, it asks for a better target phrase. It then uses the updated target phrase to generate a prompt and retrieve the desired quote and verse specifically related to that target.
+   - as can be found on https://github.com/jonipwi/ocai/blob/main/php/verse.php
+   
 # playstore
 https://play.google.com/store/apps/details?id=com.sobatam.ocai.ocai
 
