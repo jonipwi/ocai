@@ -50,6 +50,12 @@ $sql1 = "INSERT INTO iplog (dt,ip,stat) VALUES (NOW(),'$IP',0) ";
 $res1 = mysqli_query($conn, $sql1);
 
 //$targetid = "Please give me 1 quote and 1 verse for today that support to be trained become a highest ethical nobleman should meditating on";
+$r = mopenai($targetid);
+if ($r == 4) {
+   $targetid = vopenai('Please suggest better one instead of this "'.$targetid.'" which build highest ethical noble characteristics not more than 8 words');
+   $sql1 = "UPDATE auths SET gpt='$targetid' WHERE (uuid LIKE '$deviceid') ";
+   $res1 = mysqli_query($conn, $sql1);
+}
 $promptid = 'Please give me 1 quote and 1 verse for today strictly only about this "'.$targetid.'" and do not tell me others not related.';
 $res = chatGPT($conn, trim($promptid));
 
