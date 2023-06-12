@@ -543,6 +543,7 @@ class _MyPage1State extends State<MyPage1> {
         // Stop recording
         await record.stop();
 
+        print('Stop record audio.');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Stop record audio.')),
         );
@@ -555,6 +556,7 @@ class _MyPage1State extends State<MyPage1> {
           samplingRate: 44100, // by default
         );
 
+        print('Start record audio.');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Start record audio')),
         );
@@ -619,7 +621,7 @@ class _MyPage1State extends State<MyPage1> {
   }
 
   void setAudioParent(BuildContext context) async {
-    await ttsStop();
+    if (muteOn == false) await ttsStop();
 
     QAResult = '';
 
@@ -637,6 +639,9 @@ class _MyPage1State extends State<MyPage1> {
           QAResult = '${value}';
           bioDes = '${value}';
         });
+
+        print('$deviceId -> $value');
+        setBioAI('$deviceId', '$value');
       }
     });
   }
@@ -772,6 +777,44 @@ class _MyPage1State extends State<MyPage1> {
     }
   }
 
+  Future<Null> setBioAI(String deviceid, String q) async{
+    String encoded = base64.encode(utf8.encode(q));
+
+    Map<String, String> qParams = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${serverToken}',
+      'x-device': '${deviceid}',
+      'x-target': '${encoded}',
+    };
+
+    setState(() {
+      loading = true;
+    });
+
+    String fetchRequestUrl = "https://dogemazon.net/ocai/bio.php?q=${encoded}";
+    try {
+      final responseData = await http.get(
+          Uri.parse(fetchRequestUrl),
+          headers: qParams
+      );
+      if (responseData.statusCode == 200) {
+        final data = responseData.body.split('|');
+        String decoded = utf8.decode(base64.decode(data[1]));
+        //print('Data: ${decoded}');
+        setState(() {
+          //bioDes = decoded;
+          bioDes = q;
+          loading = false;
+        });
+        print('Bio: $decoded');
+      }
+    } catch (e) {
+      print('Bio: Error Http!');
+    }
+
+  }
+
   void setFollowParent(String fid) {
     inPost = 0;
     //print('$deviceId:$fid');
@@ -875,6 +918,18 @@ class _MyPage1State extends State<MyPage1> {
       }
     }
 
+  }
+
+  void _onPress() {
+    print('1.Audio');
+    BuildContext? context = navigatorKey.currentContext;
+    setAudioParent(context!);
+  }
+
+  void _onRelease() {
+    print('2.Audio');
+    BuildContext? context = navigatorKey.currentContext;
+    setAudioParent(context!);
   }
 
   @override
@@ -1278,12 +1333,13 @@ class _MyPage1State extends State<MyPage1> {
                             ),
 
                             GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 setState(() {
                                   btnIndex = 1;
                                 });
                                 print(btnIndex);
-                                verseTodayAI('${deviceId}','${bioDes}');
+                                await verseTodayAI('${deviceId}','${bioDes}');
+                                await getStoryAI(deviceId!, 'STORY');
                                 callPage(11, 'Community');
                               },
                               child: (btnIndex == 1)
@@ -1727,11 +1783,10 @@ class _MyPage1State extends State<MyPage1> {
                         ),
                         SizedBox(height: 20),
                         GestureDetector(
-                          onTap: () {
-                            // Handle edit button press
-                            print('0.Audio');
-                            setAudioParent(context);
-                          },
+                          //onTapDown: (_) => _onPress(),
+                          //onTapUp: (_) => _onRelease(),
+                          //onTapCancel: () => _onRelease(),
+                          onTap: () => _onPress(),
                           child: Container(
                             width: 100,
                             height: 36,
@@ -1749,19 +1804,17 @@ class _MyPage1State extends State<MyPage1> {
                                   children:[
                                     SizedBox(width: 10),
                                     GestureDetector(
-                                      onTap: () {
-                                        // Handle edit button press
-                                        print('1.Audio');
-                                        setAudioParent(context);
-                                      },
+                                      //onTapDown: (_) => _onPress(),
+                                      //onTapUp: (_) => _onRelease(),
+                                      //onTapCancel: () => _onRelease(),
+                                      onTap: () => _onPress(),
                                       child: Icon((micOn) ? Icons.mic_off : Icons.mic),
                                     ),
                                     GestureDetector(
-                                      onTap: () {
-                                        // Handle edit button press
-                                        print('2.Audio');
-                                        setAudioParent(context);
-                                      },
+                                      //onTapDown: (_) => _onPress(),
+                                      //onTapUp: (_) => _onRelease(),
+                                      //onTapCancel: () => _onRelease(),
+                                      onTap: () => _onPress(),
                                       child: Text(' Edit Bio'),
                                     ),
                                   ]),

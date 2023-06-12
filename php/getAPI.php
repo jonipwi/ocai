@@ -50,6 +50,10 @@ function getRequestHeaders() {
 
 $bearer  = getBearerToken();
 
+//$f = fopen("./header.log", "w+");
+//fputs($f, $bearer);
+//fclose($f);
+
 $headers = getRequestHeaders();
 $secret  = "";
 foreach ($headers as $header => $value) {
@@ -74,7 +78,7 @@ if (($secret != "") || ($bearer != "")) {
    $key      = $skey[1];
 }
 
-if ($deviceid == "") {
+if (($deviceid == "") && ($SKIP == false)) {
    print "Error: device failed!"; exit;
 }
 

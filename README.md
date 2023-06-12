@@ -52,7 +52,7 @@ https://github.com/jonipwi/ocai/blob/main/screenshot/sample%20violation%20blocke
 # playstore
 https://play.google.com/store/apps/details?id=com.sobatam.ocai.ocai
 
-# Free download version 3.17.0+17 (recommended for user experience)
+# Free download version 3.18.0+18 (recommended for user experience - fix bug)
 Note: Set own Bio to customized own related 1 quote 1 verse for the day.
 https://dogemazon.net/ocai/app-release.apk 
 

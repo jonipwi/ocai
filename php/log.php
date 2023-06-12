@@ -56,9 +56,9 @@ $IP   = $_SERVER['REMOTE_ADDR'];
 $now  = date("Y-m-d H:i:s");
 $uuid = trim($_REQUEST['data']);
 
-$f = fopen('log.txt', 'w+');
-fputs($f, $uuid);
-fclose($f);
+//$f = fopen('log.txt', 'w+');
+//fputs($f, $uuid);
+//fclose($f);
 
 $sql  = "SELECT * FROM auths WHERE (uuid LIKE '$uuid') ";
 $res  = mysqli_query($conn, $sql);

@@ -56,6 +56,11 @@ if ($r == 4) {
    $sql1 = "UPDATE auths SET gpt='$targetid' WHERE (uuid LIKE '$deviceid') ";
    $res1 = mysqli_query($conn, $sql1);
 }
+
+//$net101 = kopenai($targetid);
+//$sqln = "UPDATE auths SET netkey='$net101' WHERE (uuid LIKE '$deviceid') ";
+//$resn = mysqli_query($conn, $sqln);
+
 $promptid = 'Please give me 1 quote and 1 verse for today strictly only about this "'.$targetid.'" and do not tell me others not related.';
 $res = chatGPT($conn, trim($promptid));
 
