@@ -15,7 +15,7 @@ const langTTS = [
 const langGPT = [
   'en',
   'id',
-  'zh',
+  'zh-cn',
   'ko',
   'ja',
 ];

@@ -42,7 +42,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 const btnColor = Color.fromRGBO(230, 230, 230, 0.9);
 
-const versi = '3.19.0+19';
+const versi = '3.20.0+20';
 const serverToken = "[SERVER_BASE_API_TOKEN]";
 
 const double cardWidth = 166;

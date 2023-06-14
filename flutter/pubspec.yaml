@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 3.19.0+19
+version: 3.20.0+20
 #version 3.6.0+6: Update Distribution Graph (data not sync yet).
 #version 3.7.0+7: Sync dynamic data to distribution graph (plotting).
 #version 3.8.0+8: New UI/UX Design.
@@ -31,6 +31,8 @@ version: 3.19.0+19
 #version 3.17.0+17: Set your Bio and get your own customized cultivation quote and verse today.
 #version 3.18.0+18: Bugs permission Audio Record for Write Storage
 #version 3.19.0+19: Support Asian Language TTS
+#version 3.20.0+20: Fix bug ttsSpeak multi-language
+#version 3.21.0+21: Translator Multi-Language
 
 environment:
   sdk: '>=3.1.0-117.0.dev <4.0.0'
@@ -63,6 +65,7 @@ dependencies:
   record:
   intl:
   flutter_tts:
+  translator:
 
 dev_dependencies:
   flutter_test:

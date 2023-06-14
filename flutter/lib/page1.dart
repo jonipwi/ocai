@@ -4,11 +4,11 @@ import 'dart:async';
 import 'dart:io' show File, Platform;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -20,6 +20,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:record/record.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:translator/translator.dart';
 import 'catalog.dart';
 import 'globals.dart';
 import 'lang.dart';
@@ -37,6 +38,7 @@ enum TtsState { playing, stopped, paused, continued }
 
 class _MyPage1State extends State<MyPage1> {
 
+  GoogleTranslator translator = GoogleTranslator();
   late FlutterTts flutterTts;
   String? engine;
   double volume = 0.5;
@@ -395,7 +397,10 @@ class _MyPage1State extends State<MyPage1> {
             follower = resi['follower'];
             following = resi['following'];
             posting = resi['posting'];
-            bioDes = resi['gpt'];
+            translator.translate("${resi['gpt']}", from: 'en', to: '${langGPT[langIdx]}').then((value) {
+              print(value.text);
+              bioDes = value.text;
+            });
           });
         } else {
           setState(() {
@@ -602,13 +607,14 @@ class _MyPage1State extends State<MyPage1> {
   }
 
   void ttsParentSpeak(String text) {
-    ttsStop();
+    //ttsStop();
     setState(() {
       muteOn = false;
     });
-    Future.delayed(const Duration(milliseconds: 500), () {
-      ttsSpeak(text!);
-    });
+    ttsSpeakMultiLang('${text}');
+    //Future.delayed(const Duration(milliseconds: 500), () {
+    //  ttsSpeak(text!);
+    //});
   }
 
   Future ttsStop() async {
@@ -620,6 +626,8 @@ class _MyPage1State extends State<MyPage1> {
   }
 
   Future ttsSpeak(String text) async {
+    // Set Google TTS engine
+    //await flutterTts.setEngine('com.google.android.tts');
     await flutterTts.setLanguage('${langTTS[langIdx]}');
     await flutterTts.getDefaultEngine;
     await flutterTts.getDefaultVoice;
@@ -634,6 +642,16 @@ class _MyPage1State extends State<MyPage1> {
     }
   }
 
+  void ttsSpeakMultiLang(String text) async {
+    if (langIdx <= 1) {
+      await ttsStop();
+      await ttsSpeak('$text');
+      print('Speak: $text');
+    } else {
+      print('Language: ${langTTS[langIdx]} not support');
+    }
+  }
+
   void setAudioParent(BuildContext context) async {
     if (muteOn == false) await ttsStop();
 
@@ -645,9 +663,10 @@ class _MyPage1State extends State<MyPage1> {
     convertSpeechToText(apiKey, '${tempPath}/myOpenAI.m4a').then((value) {
       //print(value);
       if (!value.toLowerCase().contains('error')) {
-        Future.delayed(const Duration(milliseconds: 500), () {
-          ttsSpeak(value!);
-        });
+        //Future.delayed(const Duration(milliseconds: 500), () {
+        //  ttsSpeak(value!);
+        //});
+        ttsSpeakMultiLang(value);
 
         setState(() {
           QAResult = '${value}';
@@ -686,14 +705,17 @@ class _MyPage1State extends State<MyPage1> {
         dtVerseToday = DateTime.now();
         final data = responseData.body.split('|');
         String decoded = utf8.decode(base64.decode(data[1]));
-        setState(() {
-          Result = decoded;
-          Answer = Result;
-          loading = false;
-          verseToday = decoded;
+        translator.translate("${decoded}", from: 'en', to: '${langGPT[langIdx]}').then((value) {
+          print(value.text);
+          setState(() {
+            Result = value.text;
+            Answer = Result;
+            loading = false;
+            verseToday = value.text;
+          });
+          //print('$verseToday');
+          ttsParentSpeak('$verseToday');
         });
-        //print('$verseToday');
-        ttsParentSpeak('$verseToday');
       }
     } catch (e) {
       print('Verse Today: Error Http!');
@@ -735,7 +757,10 @@ class _MyPage1State extends State<MyPage1> {
           int id = 0;
           for(var json in js['json']) {
             print(json["avatar"]);
-            listStory.add(Story(id: json["id"], avatar: '${json["avatar"]}', nick: '${json["nick"]}', data: '${json["data"]}', photo: '${json["photo"]}', tipe: '${json["tipe"]}', tags: '${json["tags"]}', btnstat: '${json["btnstat"]}', uuid: '${json["uuid"]}', timestamp: '${json["timestamp"]}'));
+            translator.translate("${json["data"]}", from: 'en', to: '${langGPT[langIdx]}').then((value) {
+              print(value.text);
+              listStory.add(Story(id: json["id"], avatar: '${json["avatar"]}', nick: '${json["nick"]}', data: '${value.text}', photo: '${json["photo"]}', tipe: '${json["tipe"]}', tags: '${json["tags"]}', btnstat: '${json["btnstat"]}', uuid: '${json["uuid"]}', timestamp: '${json["timestamp"]}'));
+            });
             id++;
           }
           print(listStory.length);
@@ -746,7 +771,7 @@ class _MyPage1State extends State<MyPage1> {
         });
       }
     } catch (e) {
-      print('Verse Today: Error Http!');
+      print('Story Today: Error Http!');
     }
 
   }
@@ -775,16 +800,19 @@ class _MyPage1State extends State<MyPage1> {
         //print(responseData.body);
         final data = responseData.body.split('|');
         String decoded = utf8.decode(base64.decode(data[1]));
-        setState(() {
-          Result = decoded;
-          Answer = Result;
-          loading = false;
-          String smean = decoded.split('Mean: ')[1];
-          mean = double.parse(smean.split(',')[0]);
-          String sstd = decoded.split('Std: ')[1];
-          std = double.parse(sstd.split(',')[0]);
+        translator.translate("${decoded}", from: 'en', to: '${langGPT[langIdx]}').then((value) {
+          print(value.text);
+          setState(() {
+            Result = value.text;
+            Answer = Result;
+            loading = false;
+            String smean = decoded.split('Mean: ')[1];
+            mean = double.parse(smean.split(',')[0]);
+            String sstd = decoded.split('Std: ')[1];
+            std = double.parse(sstd.split(',')[0]);
+          });
+          print('$Answer \n$mean $std');
         });
-        print('$Answer \n$mean $std');
       }
     } catch (e) {
       print('Answer: Error Http!');
@@ -792,7 +820,9 @@ class _MyPage1State extends State<MyPage1> {
   }
 
   Future<Null> setBioAI(String deviceid, String q) async{
-    String encoded = base64.encode(utf8.encode(q));
+    var translationEN = await translator.translate("$q", from: '${langGPT[langIdx]}', to: 'en');
+    print(translationEN.text);
+    String encoded = base64.encode(utf8.encode(translationEN.text));
 
     Map<String, String> qParams = {
       'Content-type': 'application/json',
@@ -816,12 +846,16 @@ class _MyPage1State extends State<MyPage1> {
         final data = responseData.body.split('|');
         String decoded = utf8.decode(base64.decode(data[1]));
         //print('Data: ${decoded}');
+        var translation = await translator.translate("${translationEN.text}", from: 'en', to: '${langGPT[langIdx]}');
+        print(translation.text);
+
         setState(() {
           //bioDes = decoded;
-          bioDes = q;
+          bioDes = translation.text;
           loading = false;
         });
-        print('Bio: $decoded');
+
+        print('Bio: ${translation.text}');
       }
     } catch (e) {
       print('Bio: Error Http!');
@@ -950,7 +984,7 @@ class _MyPage1State extends State<MyPage1> {
   void initState() {
     super.initState();
 
-    langIdx = 1;
+    langIdx = 0;
     Langu = Langua(langIdx);
     LangEN = Langu.split("|");
 
@@ -1055,7 +1089,7 @@ class _MyPage1State extends State<MyPage1> {
                                                 child: Row(
                                                 children: [
                                                   Icon(Icons.language, color: Colors.white70),
-                                                  Text('Language', style: TextStyle(color: Colors.white70))
+                                                  Text('${supportedLocales.split('|')[langIdx]}', style: TextStyle(color: Colors.white70))
                                                 ]),
                                             ),
                                           ]),
@@ -1332,10 +1366,18 @@ class _MyPage1State extends State<MyPage1> {
                                 langIdx = country.id;
                                 Langu = Langua(langIdx);
                                 LangEN = Langu.split("|");
+                                ttsSpeakMultiLang('${LangEN[8]} OCAI-3 ${LangEN[9]}');
+
+                                translator.translate("${bioDes}", from: 'en', to: '${langGPT[langIdx]}').then((value) {
+                                  print(value.text);
+                                  bioDes = value.text;
+                                });
 
                                 print(country.name);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text('${country.name}')));
+
+                                callPage(0, 'Home');
                               });
                             },
                           );
@@ -2282,7 +2324,7 @@ class _MyPage1State extends State<MyPage1> {
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = Text('${LangEN[12]}', style: style);
+        text = Text('${LangEN[11]}', style: style);
         break;
       case 1:
         text = Text('${(mean! - (std! * 2)).toStringAsFixed(2)}', style: style);
@@ -2300,7 +2342,7 @@ class _MyPage1State extends State<MyPage1> {
         text = Text('${(mean! + (std! * 2)).toStringAsFixed(2)}', style: style);
         break;
       case 6:
-        text = Text('${LangEN[13]}', style: style);
+        text = Text('${LangEN[12]}', style: style);
         break;
       default:
         text = const Text('', style: style);
