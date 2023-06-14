@@ -22,6 +22,7 @@ import 'package:record/record.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'catalog.dart';
 import 'globals.dart';
+import 'lang.dart';
 
 class MyPage1 extends StatefulWidget {
   const MyPage1({super.key, required this.title});
@@ -37,7 +38,6 @@ enum TtsState { playing, stopped, paused, continued }
 class _MyPage1State extends State<MyPage1> {
 
   late FlutterTts flutterTts;
-  String? language = 'en-AU';
   String? engine;
   double volume = 0.5;
   double pitch = 1.0;
@@ -82,6 +82,18 @@ class _MyPage1State extends State<MyPage1> {
 
   late Timer _timer;
 
+  final List<String> dropdownItems = supportedLocales.split('|');
+  Country? _selectedCountry;
+  List<Country> _countryList = [
+    Country(id: 0, name: 'Singapore', flag: '🇸🇬'),
+    Country(id: 1, name: 'Indonesia', flag: '🇮🇩'),
+    Country(id: 2, name: 'China', flag: '🇨🇳'),
+    Country(id: 3, name: 'Korea', flag: '🇰🇷'),
+    Country(id: 4, name: 'Japan', flag: '🇯🇵'),
+
+    // Add more countries here
+  ];
+
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
@@ -116,7 +128,7 @@ class _MyPage1State extends State<MyPage1> {
   String status = '';
   late String base64Image;
   late File tmpFile;
-  String errMessage = 'Error Uploading Image';
+  String errMessage = '${LangEN[0]}';
 
   /*Future<void> captureAndUploadImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -169,9 +181,9 @@ class _MyPage1State extends State<MyPage1> {
         //setState(() {
         BuildContext? context = navigatorKey.currentContext;
         ScaffoldMessenger.of(context!).showSnackBar(
-            SnackBar(content: Text('Deleted: ${imgId}')));
+            SnackBar(content: Text('${LangEN[1]}: ${imgId}')));
         //});
-        getStoryAI(deviceId!, 'STORY');
+        getStoryAI(deviceId!, '${LangEN[2]}');
       }
       setStatus(result.statusCode == 200 ? result.body : errMessage);
     }).catchError((error) {
@@ -206,7 +218,7 @@ class _MyPage1State extends State<MyPage1> {
   }
 
   startUploadPosting() {
-    setStatus('Uploading Posting Image...');
+    setStatus('${LangEN[3]}...');
     if (null == tmpFile) {
       setStatus(errMessage);
       return;
@@ -237,7 +249,7 @@ class _MyPage1State extends State<MyPage1> {
           ScaffoldMessenger.of(context!).showSnackBar(
               SnackBar(content: Text('${data['message']}')));
         //});
-          getStoryAI(deviceId!, 'STORY');
+          getStoryAI(deviceId!, '${LangEN[2]}');
       }
       setStatus(result.statusCode == 200 ? result.body : errMessage);
     }).catchError((error) {
@@ -306,7 +318,7 @@ class _MyPage1State extends State<MyPage1> {
   }
 
   startUpload() {
-    setStatus('Uploading Image...');
+    setStatus('${LangEN[4]}...');
     if (null == tmpFile) {
       setStatus(errMessage);
       return;
@@ -543,9 +555,9 @@ class _MyPage1State extends State<MyPage1> {
         // Stop recording
         await record.stop();
 
-        print('Stop record audio.');
+        print('${LangEN[5]}.');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Stop record audio.')),
+          SnackBar(content: Text('${LangEN[5]}.')),
         );
       } else {
         // Start recording
@@ -556,9 +568,9 @@ class _MyPage1State extends State<MyPage1> {
           samplingRate: 44100, // by default
         );
 
-        print('Start record audio.');
+        print('${LangEN[6]}.');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Start record audio')),
+          SnackBar(content: Text('${LangEN[6]}')),
         );
       }
     }
@@ -570,7 +582,7 @@ class _MyPage1State extends State<MyPage1> {
       var request = http.MultipartRequest('POST', url);
       request.headers.addAll(({"Authorization": "Bearer $apiKey"}));
       request.fields["model"] = 'whisper-1';
-      request.fields["language"] = "en";
+      request.fields["language"] = "${langGPT[langIdx]}";
       request.files.add(await http.MultipartFile.fromPath('file', filePath));
       var response = await request.send();
       var newresponse = await http.Response.fromStream(response);
@@ -608,7 +620,9 @@ class _MyPage1State extends State<MyPage1> {
   }
 
   Future ttsSpeak(String text) async {
-    //await flutterTts.setLanguage('en-AU');
+    await flutterTts.setLanguage('${langTTS[langIdx]}');
+    await flutterTts.getDefaultEngine;
+    await flutterTts.getDefaultVoice;
     await flutterTts.setVolume(volume);
     await flutterTts.setSpeechRate(rate);
     await flutterTts.setPitch(pitch);
@@ -893,7 +907,7 @@ class _MyPage1State extends State<MyPage1> {
       await postURL('https://dogemazon.net/ocai/log.php', '${deviceId}', 'PROFILE', '$bioDes');
       if (isSignIn) {
         print('1.UUID: $deviceId');
-        await getStoryAI(deviceId!, 'STORY');
+        await getStoryAI(deviceId!, '${LangEN[2]}');
       }
     } else {
       //Generate Id
@@ -914,7 +928,7 @@ class _MyPage1State extends State<MyPage1> {
         deviceId = temp;
         saveProfile('${deviceId}');
         print('3.UUID: $deviceId');
-        await getStoryAI(deviceId!, 'STORY');
+        await getStoryAI(deviceId!, '${LangEN[2]}');
       }
     }
 
@@ -935,6 +949,11 @@ class _MyPage1State extends State<MyPage1> {
   @override
   void initState() {
     super.initState();
+
+    langIdx = 1;
+    Langu = Langua(langIdx);
+    LangEN = Langu.split("|");
+
     Initialized();
     initTts();
     micOn = true;
@@ -1024,9 +1043,20 @@ class _MyPage1State extends State<MyPage1> {
                                                 onTap: () {
                                                   Clipboard.setData(ClipboardData(text: '${deviceId}'));
                                                   ScaffoldMessenger.of(context).showSnackBar(
-                                                      SnackBar(content: Text('Ticket copied!')));
+                                                      SnackBar(content: Text('${LangEN[7]}!')));
                                                 },
                                                 child: Icon(Icons.copy_all, color: Colors.white70)
+                                            ),
+                                            SizedBox(width: 20),
+                                            GestureDetector(
+                                                onTap: () {
+                                                  callPage(77, 'Language');
+                                                },
+                                                child: Row(
+                                                children: [
+                                                  Icon(Icons.language, color: Colors.white70),
+                                                  Text('Language', style: TextStyle(color: Colors.white70))
+                                                ]),
                                             ),
                                           ]),
                                       Text('${nickName}', style: TextStyle(
@@ -1072,7 +1102,7 @@ class _MyPage1State extends State<MyPage1> {
                                 ),
                               ]),
                           SizedBox(height: 10),
-                          Text('START YOUR', style: TextStyle(
+                          Text('${LangEN[8]}', style: TextStyle(
                               fontFamily: 'Righteous',
                               fontSize: 38,
                               color: Colors.white70,
@@ -1082,7 +1112,7 @@ class _MyPage1State extends State<MyPage1> {
                               fontSize: 38,
                               color: Colors.orangeAccent,
                               fontWeight: FontWeight.normal)),
-                          Text('JOURNEY', style: TextStyle(
+                          Text('${LangEN[9]}', style: TextStyle(
                               fontFamily: 'Righteous',
                               fontSize: 38,
                               color: Colors.white70,
@@ -1122,7 +1152,7 @@ class _MyPage1State extends State<MyPage1> {
                                         ],
                                       ),
                                       child: Center(
-                                        child: Text('All'),
+                                        child: Text('${LangEN[10]}'),
                                       )
                                   ),
                                 ),
@@ -1156,7 +1186,7 @@ class _MyPage1State extends State<MyPage1> {
                                       ],
                                     ),
                                     child: Center(
-                                      child: Text('Flesh'),
+                                      child: Text('${LangEN[11]}'),
                                     ),
                                   ),
                                 ),
@@ -1190,7 +1220,7 @@ class _MyPage1State extends State<MyPage1> {
                                         ],
                                       ),
                                       child: Center(
-                                        child: Text('Spirit'),
+                                        child: Text('${LangEN[12]}'),
                                       ),
                                     )
                                 ),
@@ -1208,51 +1238,112 @@ class _MyPage1State extends State<MyPage1> {
                               child: (menuIndex == 0) ? Row(
                                 children: [
                                   CustomWidget(color: Color.fromRGBO(250, 250, 250, 0.9), width: cardWidth, height: cardHeight,
-                                      image: 'https://dogemazon.net/ocai/eat2.jpeg', status: '4 hours ago', title: 'Eat Healthy', description: 'Balance & Healthy'),
+                                      image: 'https://dogemazon.net/ocai/eat2.jpeg', status: '4 ${LangEN[13]}', title: 'Eat Healthy', description: 'Balance & Healthy'),
                                   CustomWidget(color: Color.fromRGBO(250, 250, 250, 0.9), width: cardWidth, height: cardHeight,
-                                      image: 'https://dogemazon.net/ocai/exercise.png', status: '3 days ago', title: 'Body Exercise', description: 'Walking & Jogging'),
+                                      image: 'https://dogemazon.net/ocai/exercise.png', status: '3 ${LangEN[14]}', title: 'Body Exercise', description: 'Walking & Jogging'),
                                   CustomWidget(color: Color.fromRGBO(250, 250, 250, 0.9), width: cardWidth, height: cardHeight,
-                                      image: 'https://dogemazon.net/ocai/sleep2.jpg', status: '8 hours ago', title: 'Sleep Comfort', description: 'Relaxing & Recovering'),
+                                      image: 'https://dogemazon.net/ocai/sleep2.jpg', status: '8 ${LangEN[13]}', title: 'Sleep Comfort', description: 'Relaxing & Recovering'),
                                   CustomWidget(color: Color.fromRGBO(250, 250, 250, 0.9), width: cardWidth, height: cardHeight,
-                                      image: 'https://dogemazon.net/ocai/yoga.jpeg', status: '12 hours ago', title: 'Pray Meditation', description: 'Faith & Relationship'),
+                                      image: 'https://dogemazon.net/ocai/yoga.jpeg', status: '12 ${LangEN[13]}', title: 'Pray Meditation', description: 'Faith & Relationship'),
                                   CustomWidget(color: Color.fromRGBO(250, 250, 250, 0.9), width: cardWidth, height: cardHeight,
-                                      image: 'https://dogemazon.net/ocai/reading1.jpg', status: '5 hours ago', title: 'Wisdom Knowledge', description: 'Reading & Listening'),
+                                      image: 'https://dogemazon.net/ocai/reading1.jpg', status: '5 ${LangEN[13]}', title: 'Wisdom Knowledge', description: 'Reading & Listening'),
                                   CustomWidget(color: Color.fromRGBO(250, 250, 250, 0.9), width: cardWidth, height: cardHeight,
-                                      image: 'https://dogemazon.net/ocai/love1.png', status: '1 week ago', title: 'Loving Cares', description: 'Charity Love & Kindness'),
+                                      image: 'https://dogemazon.net/ocai/love1.png', status: '1 ${LangEN[15]}', title: 'Loving Cares', description: 'Charity Love & Kindness'),
                                 ],
                               ) : (menuIndex == 1) ? Row(
                                 children: [
                                   CustomWidget(color: Color.fromRGBO(250, 250, 250, 0.9), width: cardWidth, height: cardHeight,
-                                      image: 'https://dogemazon.net/ocai/eat2.jpeg', status: '4 hours ago', title: 'Eat Healthy', description: 'Balance & Healthy'),
+                                      image: 'https://dogemazon.net/ocai/eat2.jpeg', status: '4 ${LangEN[13]}', title: 'Eat Healthy', description: 'Balance & Healthy'),
                                   CustomWidget(color: Color.fromRGBO(250, 250, 250, 0.9), width: cardWidth, height: cardHeight,
-                                      image: 'https://dogemazon.net/ocai/exercise.png', status: '3 days ago', title: 'Body Exercise', description: 'Walking & Jogging'),
+                                      image: 'https://dogemazon.net/ocai/exercise.png', status: '3 ${LangEN[14]}', title: 'Body Exercise', description: 'Walking & Jogging'),
                                   CustomWidget(color: Color.fromRGBO(250, 250, 250, 0.9), width: cardWidth, height: cardHeight,
-                                      image: 'https://dogemazon.net/ocai/sleep2.jpg', status: '8 hours ago', title: 'Sleep Comfort', description: 'Relaxing & Recovering'),
+                                      image: 'https://dogemazon.net/ocai/sleep2.jpg', status: '8 ${LangEN[13]}', title: 'Sleep Comfort', description: 'Relaxing & Recovering'),
                                 ],
                               ) : (menuIndex == 2) ? Row(
                                 children: [
                                   CustomWidget(color: Color.fromRGBO(250, 250, 250, 0.9), width: cardWidth, height: cardHeight,
-                                      image: 'https://dogemazon.net/ocai/yoga.jpeg', status: '12 hours ago', title: 'Pray Meditation', description: 'Faith & Relationship'),
+                                      image: 'https://dogemazon.net/ocai/yoga.jpeg', status: '12 ${LangEN[13]}', title: 'Pray Meditation', description: 'Faith & Relationship'),
                                   CustomWidget(color: Color.fromRGBO(250, 250, 250, 0.9), width: cardWidth, height: cardHeight,
-                                      image: 'https://dogemazon.net/ocai/reading1.jpg', status: '5 hours ago', title: 'Wisdom Knowledge', description: 'Reading & Listening'),
+                                      image: 'https://dogemazon.net/ocai/reading1.jpg', status: '5 ${LangEN[13]}', title: 'Wisdom Knowledge', description: 'Reading & Listening'),
                                   CustomWidget(color: Color.fromRGBO(250, 250, 250, 0.9), width: cardWidth, height: cardHeight,
-                                      image: 'https://dogemazon.net/ocai/love1.png', status: '1 week ago', title: 'Loving Cares', description: 'Charity Love & Kindness'),
+                                      image: 'https://dogemazon.net/ocai/love1.png', status: '1 ${LangEN[15]}', title: 'Loving Cares', description: 'Charity Love & Kindness'),
                                 ],
                               ) : Container(),
                             ),
                           ),
 
-                          SizedBox(height: 20),
+                          SizedBox(height: 10),
                           Center(
-                              child: Text('This version is for Educational Purposes.', style: TextStyle(color: Colors.white))
+                              child: Text('${LangEN[16]}.', style: TextStyle(color: Colors.white))
                           ),
                           Center(
-                              child: Text('version $versi', style: TextStyle(color: Colors.white))
-                          )
+                              child: Text('${LangEN[17]} $versi', style: TextStyle(color: Colors.white))
+                          ),
+
                         ]),
                   ),
                 ),
               ),
+
+              //--------Language
+              (goToPage == 77) ? Positioned(
+                top: 100,
+                left: width/4,
+                child: Container(
+                    width: width/2,
+                    height: 330,
+                    //color: Colors.white,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(240, 250, 240, 0.9),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(0),
+                          bottomLeft: Radius.circular(30),
+                          bottomRight: Radius.circular(30)
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 0, bottom: 15, left: 15, right: 15),
+                      child: ListView.builder(
+                        itemCount: _countryList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final country = _countryList[index];
+
+                          return ListTile(
+                            title: Row(
+                              children: [
+                                Text(country.flag),
+                                SizedBox(width: 10),
+                                Text(country.name),
+                              ],
+                            ),
+                            onTap: () {
+                              setState(() {
+                                _selectedCountry = country;
+
+                                langIdx = country.id;
+                                Langu = Langua(langIdx);
+                                LangEN = Langu.split("|");
+
+                                print(country.name);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('${country.name}')));
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    )
+                ),
+              ) : Container(),
 
               (btnIndex > 0) ? Positioned(
                 top: 0,
@@ -1339,7 +1430,7 @@ class _MyPage1State extends State<MyPage1> {
                                 });
                                 print(btnIndex);
                                 await verseTodayAI('${deviceId}','${bioDes}');
-                                await getStoryAI(deviceId!, 'STORY');
+                                await getStoryAI(deviceId!, '${LangEN[2]}');
                                 callPage(11, 'Community');
                               },
                               child: (btnIndex == 1)
@@ -1480,7 +1571,7 @@ class _MyPage1State extends State<MyPage1> {
                               children: [
                                 Row(
                                     children: [
-                                      Text('Community', style: TextStyle(fontFamily: 'Righteous', color: Colors.black, fontSize: 20)),
+                                      Text('${LangEN[18]}', style: TextStyle(fontFamily: 'Righteous', color: Colors.black, fontSize: 20)),
                                       SizedBox(width: 5),
                                       GestureDetector(
                                         onTap: () {
@@ -1534,7 +1625,7 @@ class _MyPage1State extends State<MyPage1> {
                                         });
                                       },
                                       decoration: InputDecoration(
-                                        labelText: 'Enter image description ...',
+                                        labelText: '${LangEN[19]} ...',
                                         filled: true,
                                         fillColor: Colors.white,
                                         border: OutlineInputBorder(
@@ -1547,13 +1638,13 @@ class _MyPage1State extends State<MyPage1> {
                                   CardWidget(width: width, height: height, color: Colors.white, imgId: '0', ttsParentSpeak: ttsParentSpeak, setDeleteParent: setDeleteParent,
                                     avatar: 'https://dogemazon.net/ocai/chatgptbtn.svg', nick: '$nickName', gotoParentMenu: gotoParentMenu, creator: '4RAH1-L4MT9-PLZ7V-0E5HB',
                                     timestamp: DateDiff(dateToday.toString(), dtVerseToday.toString()), story: '$verseToday', setFollowParent: setFollowParent,
-                                    image: '', tag: '#meditation #pray #spiritual', datastr: '31,11,6,25',
+                                    image: '', tag: '#${LangEN[20]} #${LangEN[21]} #${LangEN[22]}', datastr: '31,11,6,25',
                                   ),
 
                                   CardWidget(width: width, height: height, color: Colors.white, imgId: '0', ttsParentSpeak: ttsParentSpeak, setFollowParent: setFollowParent, setDeleteParent: setDeleteParent,
                                     avatar: 'https://dogemazon.net/ocai/me.jpg', nick: '$nickName', gotoParentMenu: gotoParentMenu, creator: 'ETKN0-QRDU2-15NI6-0VQE0',
-                                    timestamp: '1 mins ago', story: 'For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind. 2 Timothy 1:7',
-                                    image: 'https://www.worldchallenge.org/sites/default/files/210707-pc-web.jpg', tag: '#meditation #pray #spiritual', datastr: '51,1,9,210',
+                                    timestamp: '1 ${LangEN[23]}', story: '${LangEN[24]}',
+                                    image: 'https://www.worldchallenge.org/sites/default/files/210707-pc-web.jpg', tag: '#${LangEN[20]} #${LangEN[21]} #${LangEN[22]}', datastr: '51,1,9,210',
                                   ),
 
                                   for (var i = 0; i < listStory.length; i++)
@@ -1681,7 +1772,7 @@ class _MyPage1State extends State<MyPage1> {
                           onTap: () {
                             Clipboard.setData(ClipboardData(text: '${deviceId}'));
                             ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Ticket copied!')));
+                                SnackBar(content: Text('${LangEN[7]}!')));
                           },
                           child: Text(
                             '$deviceId',
@@ -1705,7 +1796,7 @@ class _MyPage1State extends State<MyPage1> {
                             Column(
                               children: [
                                 Text(
-                                  'Followers',
+                                  '${LangEN[25]}',
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.grey,
@@ -1723,7 +1814,7 @@ class _MyPage1State extends State<MyPage1> {
                             Column(
                               children: [
                                 Text(
-                                  'Following',
+                                  '${LangEN[26]}',
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.grey,
@@ -1741,7 +1832,7 @@ class _MyPage1State extends State<MyPage1> {
                             Column(
                               children: [
                                 Text(
-                                  'Posts',
+                                  '${LangEN[27]}',
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.grey,
@@ -1762,7 +1853,7 @@ class _MyPage1State extends State<MyPage1> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20),
                           child: Text(
-                            'Bio',
+                            '${LangEN[28]}',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -1815,7 +1906,7 @@ class _MyPage1State extends State<MyPage1> {
                                       //onTapUp: (_) => _onRelease(),
                                       //onTapCancel: () => _onRelease(),
                                       onTap: () => _onPress(),
-                                      child: Text(' Edit Bio'),
+                                      child: Text(' ${LangEN[29]}'),
                                     ),
                                   ]),
                             ),
@@ -1857,9 +1948,9 @@ class _MyPage1State extends State<MyPage1> {
                     child: Container(
                         child: TextField(
                           controller: QAController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: 'Describe your story here',
+                            labelText: '${LangEN[30]}',
                           ),
                         )
                     )
@@ -1925,7 +2016,7 @@ class _MyPage1State extends State<MyPage1> {
                                     children: [
                                       Icon(Icons.circle_notifications, color: Colors.blueGrey, size: 20),
                                       Container(
-                                        child: Text('Hello, how may I help you?'),
+                                        child: Text('${LangEN[31]}?'),
                                       ),
                                     ],
                                   ),
@@ -2191,7 +2282,7 @@ class _MyPage1State extends State<MyPage1> {
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = Text('Flesh', style: style);
+        text = Text('${LangEN[12]}', style: style);
         break;
       case 1:
         text = Text('${(mean! - (std! * 2)).toStringAsFixed(2)}', style: style);
@@ -2209,7 +2300,7 @@ class _MyPage1State extends State<MyPage1> {
         text = Text('${(mean! + (std! * 2)).toStringAsFixed(2)}', style: style);
         break;
       case 6:
-        text = Text('Spirit', style: style);
+        text = Text('${LangEN[13]}', style: style);
         break;
       default:
         text = const Text('', style: style);

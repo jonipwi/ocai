@@ -32,3 +32,6 @@ https://www.youtube.com/watch?v=o8XkdaxmfjQ
 
 # eg. violation blocked at advanced posting before publication
 https://github.com/jonipwi/ocai/blob/main/screenshot/sample%20violation%20blocked%20posting.png
+
+# version 3.19.0+19: Multi-language English, Indonesian, Mandarin, Korean, Japanese.
+https://github.com/jonipwi/ocai/blob/main/screenshot/multi-lang.png
