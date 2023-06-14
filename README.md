@@ -67,3 +67,6 @@ https://github.com/jonipwi/ocai/blob/main/screenshot/sample%20violation%20blocke
 
 # version 3.19.0+19: Multi-language English, Indonesian, Mandarin, Korean, Japanese.
 https://github.com/jonipwi/ocai/blob/main/screenshot/multi-lang.png
+
+# AI GPT chipset smartphone from OpenAI
+- this will be decentralized the whole highest ethics moral nobility character builder tools to everyone.
