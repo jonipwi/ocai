@@ -121,3 +121,56 @@ With every breath, our purpose we'll proclaim,
 For Jesus' glory, forever we'll exclaim.
 
 Note: This is an original song written specifically for the title "For Jesus Glory - His highest ethical moral noble." Feel free to modify the lyrics or add music to suit your preferences and style.
+
+# Melody / Guitar / Piano of "For Jesus Glory - His highest ethical moral noble.Verse/Chorus"
+(Verse 1)
+C G Am F
+In the realm of the divine
+C G Am F
+Where love's embrace resides
+C G Am F
+There shines a light so bright
+C G Am F
+Where truth and grace collide
+
+(Chorus)
+C G Am F
+For Jesus' glory, we sing in unity
+C G Am F
+His love and righteousness, our eternal melody
+C G Am F
+In His light, we find our way
+C G Am F
+For Jesus' glory, we live each day
+
+(Bridge)
+Dm F C G
+Oh, His love, unyielding, it breaks every chain
+Dm F C G
+His mercy and compassion, an everlasting refrain
+Dm F C G
+With humility, we walk in His righteous ways
+Dm F C G
+For Jesus' glory, we offer our praise
+
+(Chorus)
+C G Am F
+For Jesus' glory, we sing in unity
+C G Am F
+His love and righteousness, our eternal melody
+C G Am F
+In His light, we find our way
+C G Am F
+For Jesus' glory, we live each day
+
+(Outro)
+C G Am F
+For Jesus' glory, we'll stand strong and true
+C G Am F
+His teachings in our hearts, His grace shining through
+C G Am F
+With every breath, our purpose we'll proclaim
+C G Am F
+For Jesus' glory, forever we'll exclaim
+
+Note: The above notes represent a basic outline of the melody and chords. It's recommended to work with a musician or arranger to develop a full musical arrangement based on these notes, adding harmonies, dynamics, and any desired instrumental accompaniment.
