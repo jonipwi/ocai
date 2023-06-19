@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocai</title>
+    <link rel="stylesheet" href="./ui.css">
+  </head>
+  
+  <body>
+    <main class="main-container">
+      
+      <div class="content-header">
+        <div class="container">
+          <button class="btn btn-sm">
+            <svg height="22" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+              <path d="M810.666667 469.333333H304.64l154.88-186.026666a42.666667 42.666667 0 1 0-65.706667-54.613334l-213.333333 256a50.773333 50.773333 0 0 0-3.84 6.4c0 2.133333 0 3.413333-2.986667 5.546667A42.666667 42.666667 0 0 0 170.666667 512a42.666667 42.666667 0 0 0 2.986666 15.36c0 2.133333 0 3.413333 2.986667 5.546667a50.773333 50.773333 0 0 0 3.84 6.4l213.333333 256A42.666667 42.666667 0 0 0 426.666667 810.666667a42.666667 42.666667 0 0 0 27.306666-9.813334 42.666667 42.666667 0 0 0 5.546667-60.16L304.64 554.666667H810.666667a42.666667 42.666667 0 0 0 0-85.333334z"/>
+            </svg>
+          </button>
+          <h4>GPT Dialogue</h4>
+        </div>
+      </div>
+
+      <div class="chat-area">
+        <div class="container">
+          <ul>
+            <li>
+              <div class="chat-box gpt">Hello, How may I help you?</div>
+            </li>
+            <li>
+              <div class="chat-box user">I'm fine, thank you</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="input-container">
+        <form class="input-form">
+          <div class="input-form-inner" role="presentation">
+            <div class="input-wrapper">
+              <textarea id="prompt-textarea" tabindex="0" data-id="root" rows="1" placeholder="Describe your story here." class="prompt-textarea"></textarea>
+              <button disabled="" class="prompt-button">
+                <span class="" data-state="closed">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke-width="2">
+                    <path d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z" fill="currentColor"></path>
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+    </main>
+  </body>
+</html>
