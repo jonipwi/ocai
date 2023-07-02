@@ -869,6 +869,7 @@ class _MyPage1State extends State<MyPage1> {
     String encoded = base64.encode(utf8.encode('$deviceId:$fid'));
     postURL('https://dogemazon.net/ocai/follow.php', '$encoded', 'FOLLOW', '$bioDes');
   }
+
   void gotoParentMenu(int menu) {
     setState(() {
       menuIndex = menu;
